@@ -7,7 +7,7 @@ Created on Mon Sep 21 12:50:43 2015
 
 import os
 import time
-from shelx import split
+from shlex import split
 from subprocess import call, STDOUT
 
 class Masker(object):
@@ -21,7 +21,7 @@ class Masker(object):
     def get_gm(self, fast_seg, outpref):
         print '3dcalc to get gm segmentation'
         f = open('%s/stdout_from_gm_seg.txt' % self.stdoutdir, 'w')
-        calcargs = split("3dcalc -a %s -expr 'equals(a, 2) -prefix %s" %
+        calcargs = split("3dcalc -a %s -expr 'equals(a, 2)' -prefix %s" %
         (fast_seg, outpref))
         call(calcargs, stdout=f, stderr=STDOUT)
         f.close()
