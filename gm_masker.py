@@ -18,13 +18,13 @@ class Masker(object):
         self.subjid = ss
         self.stdoutdir = stdout_dir
 
-    def get_gm(self, pve, outpref):
+    def get_gm(self, pve, thr, outpref):
         print '3dcalc to get gm segmentation'
         f = open('%s/stdout_from_gm_seg.txt' % self.stdoutdir, 'w')
 #        calcargs = split("3dcalc -a %s -expr 'equals(a, 2) -prefix %s" %
 #        (fast_seg, outpref))
-        calcargs = split("3dcalc -a %s -expr 'step(a-.3)' -prefix %s" %
-        (pve, outpref))
+        calcargs = split("3dcalc -a %s -expr 'step(a-%s)' -prefix %s" %
+        (pve, thr, outpref))
         call(calcargs, stdout=f, stderr=STDOUT)
         f.close()
 
@@ -50,18 +50,19 @@ if __name__ == '__main__':
 #    subj_list = range(1, 20)
     subj_list = [19]
     for ss in subj_list:
+        thr = .25
         anat_dir = os.path.join(os.environ['avp'], 'nii',
                                 '%s_CNR.anat' % ss)
         ref_brain = os.path.join(anat_dir, '%s_1.vol8.nii.gz' % (ss))
         msk = Masker(ref_brain, ss, anat_dir)
 
         pve_seg = os.path.join(anat_dir, 'T1_fast_pve_1.nii.gz')
-        gm_out_pref = os.path.join(anat_dir, 'pve_gm_seg.%s.nii.gz' % (ss))
-        msk.get_gm(pve_seg, gm_out_pref)
+        gm_out_pref = os.path.join(anat_dir, 'pve_gm_seg.%s_thr%s.nii.gz' % (ss, thr))
+        msk.get_gm(pve_seg, thr, gm_out_pref)
 
         pre_mat = os.path.join(anat_dir, 'mprage2.%s_1.mat' % (ss))
         gm_reor_pref = os.path.join(anat_dir,
-                                    'pve_gm_seg_epispace.%s.nii.gz' % ss)
+                                    'pve_gm_seg_epispace.%s_thr%s.nii.gz' % (ss, thr))
         msk.applywarp_reorient(gm_out_pref, gm_reor_pref, pre_mat, 'nn')
 
         subcort = os.path.join(anat_dir, 'T1_subcort_seg.nii.gz')
@@ -70,5 +71,5 @@ if __name__ == '__main__':
         msk.applywarp_reorient(subcort, subcort_reor_pref, pre_mat, 'nn')
 
         mask_out_pref = os.path.join(anat_dir,
-                                     'gm_mask_epispace.%s.nii.gz' % ss)
+                                     'gm_mask_epispace.%s_thr%s.nii.gz' % (ss, thr))
         msk.mask_calc(subcort_reor_pref, gm_reor_pref, mask_out_pref)
