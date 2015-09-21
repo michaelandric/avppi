@@ -70,5 +70,5 @@ if __name__ == '__main__':
         msk.applywarp_reorient(subcort, subcort_reor_pref, pre_mat, 'nn')
 
         mask_out_pref = os.path.join(anat_dir,
-                                     'gm_mask_epispace.%ss.nii.gz' % ss)
+                                     'gm_mask_epispace.%s.nii.gz' % ss)
         msk.mask_calc(subcort_reor_pref, gm_reor_pref, mask_out_pref)
