@@ -10,8 +10,8 @@ import procs as pr
 
 
 if __name__ == '__main__':
-#    subj_list = range(1, 20)
-    subj_list = [19]
+    subj_list = range(1, 19)
+#    subj_list = [19]
     for ss in subj_list:
         for i in range(1, 5):
             anat_dir = os.path.join(os.environ['avp'], 'nii',

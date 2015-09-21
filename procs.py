@@ -16,7 +16,7 @@ def applywarp(workdir, input, extrt1, out, premat, interp=None):
     """
     print 'Doing applywarp'
     stdoutdir = os.path.join(workdir, 'stdout_files')
-    if not os.path.exists:
+    if not os.path.exists(stdoutdir):
         os.makedirs(stdoutdir)
     f = open('%s/stdout_from_applywarp.txt' % stdoutdir, 'w')
     if interp is None:
