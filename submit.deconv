@@ -1,0 +1,10 @@
+executable  = /mnt/lnif-storage/urihas/software/Python/anaconda/bin/python                     
+Rank        = (100-LoadAvg)                                                                    
+Universe    = vanilla                                                                          
+Getenv      = true                                                                             
+Output      = ./logs/do_deconvMION_condor.$(Process).out
+Error       = ./logs/do_deconvMION_condor.$(Process).err
+Log         = ./logs/do_deconvMION_condor.$(Process).log
+
+arguments = do_deconvMION_condor.py 2 
+queue
