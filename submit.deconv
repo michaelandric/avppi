@@ -6,5 +6,51 @@ Output      = ./logs/do_deconvMION_condor.$(Process).out
 Error       = ./logs/do_deconvMION_condor.$(Process).err
 Log         = ./logs/do_deconvMION_condor.$(Process).log
 
-arguments = do_deconvMION_condor.py 2 
+arguments = do_deconvMION_condor.py 3
 queue
+
+arguments = do_deconvMION_condor.py 4
+queue
+
+arguments = do_deconvMION_condor.py 5
+queue
+
+arguments = do_deconvMION_condor.py 6
+queue
+
+arguments = do_deconvMION_condor.py 7
+queue
+
+arguments = do_deconvMION_condor.py 8
+queue
+
+arguments = do_deconvMION_condor.py 9
+queue
+
+arguments = do_deconvMION_condor.py 10
+queue
+
+arguments = do_deconvMION_condor.py 11
+queue
+
+arguments = do_deconvMION_condor.py 12
+queue
+
+arguments = do_deconvMION_condor.py 13
+queue
+
+arguments = do_deconvMION_condor.py 14
+queue
+
+arguments = do_deconvMION_condor.py 15
+queue
+
+arguments = do_deconvMION_condor.py 16
+queue
+
+arguments = do_deconvMION_condor.py 17
+queue
+
+arguments = do_deconvMION_condor.py 18
+queue
+
