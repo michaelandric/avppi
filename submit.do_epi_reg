@@ -57,3 +57,6 @@ queue
 arguments = do_epi_reg_condor.py 18
 queue
 
+arguments = do_epi_reg_condor.py 19
+queue
+
