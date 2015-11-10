@@ -7,7 +7,7 @@ Created on Tue Nov 10 16:17:02 2015
 
 import os
 import numpy as np
-import general_procedures as gp
+import procs as pr
 from shlex import split
 from subprocess import Popen, PIPE
 
@@ -41,4 +41,4 @@ np.savetxt(out_name, avg_fwhm.reshape(1, 3), fmt='%.4f %.4f %.4f')
 
 mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
                     'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
-gp.clustsim(avg_fwhm, decon_dir, mask)
+pr.clustsim(avg_fwhm, decon_dir, mask)
