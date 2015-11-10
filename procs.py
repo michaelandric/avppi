@@ -120,7 +120,7 @@ def clustsim(fwhm, outdir, mask=None):
     f = open('%s/ClustSim_FWHM_%f_%f_%f_out.txt' %
              (outdir, fwhm[0], fwhm[1], fwhm[2]), 'w')
     if mask is None:
-        cmdargs = split('3dClustSim -fwhmxyz %f %f %f' %
+        cmdargs = split('3dClustSim -NN 123 -fwhmxyz %f %f %f' %
                         (fwhm[0], fwhm[1], fwhm[2]))
     else:
         cmdargs = split('3dClustSim -NN 123 -mask %s -fwhmxyz %f %f %f' %
