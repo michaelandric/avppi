@@ -8,17 +8,18 @@ Created on Fri Sep 18 18:09:48 2015
 import os
 import procs as pr
 
-
 if __name__ == '__main__':
     subj_list = range(1, 19)
 #    subj_list = [19]
+
+    decon_dir = os.path.join(os.environ['avp'], 'nii',
+                             'deconvolve_outs_concat')
+    insuff = 'Powered.cleanEPI_errts_REML+orig.'
+    outsuff = 'Powered.cleanEPI_errts_REML_mean'
     for ss in subj_list:
-        for i in range(1, 5):
-            anat_dir = os.path.join(os.environ['avp'], 'nii',
-                                    '%s_CNR.anat' % ss)
-            in_anat = os.path.join(anat_dir, 'T1_subcort_seg.nii.gz')
-            ref = os.path.join(anat_dir, '%s_%s.vol8.nii.gz' % (ss, i))
-            outf = os.path.join(anat_dir,
-                                '%s_%s.T1_subcort_seg.2epi.nii.gz' % (ss, i))
-            mat = os.path.join(anat_dir, 'mprage2.%s_%s.mat' % (ss, i))
-            pr.applywarp(anat_dir, in_anat, ref, outf, mat, 'spline')
+        fpref = 'decon_out.mion.%s_concat' % ss
+        fname = '%s.%s' % (fpref, insuff)
+        infile = os.path.join(decon_dir, fname)
+        outfname = '%s.%s' % (fpref, outsuff)
+        outfile = os.path.join(decon_dir, outfname)
+        pr.mean_epi(ss, infile, decon_dir, outfile)

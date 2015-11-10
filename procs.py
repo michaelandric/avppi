@@ -87,3 +87,63 @@ def converttoNIFTI(work_dir, brain, prefix=None):
         cmdargs = split('3dAFNItoNIFTI -prefix %s %s' % (prefix, brain))
     call(cmdargs, stdout=f, stderr=STDOUT)
     f.close()
+
+
+def fwhm_est(input_data, outname, mask=None):
+    """
+    Estiamte FWHM of data
+    Will return FWHM
+    """
+    print 'Doing fwhm_est -- %s' % time.ctime()
+    stdout_dir = 'stdout_files'
+    if not os.path.exists(stdout_dir):
+        os.makedirs(stdout_dir)
+    f = open('%s_fwhm_est_out.txt' % input_data, 'w')
+    if mask is None:
+        cmdargs = split('3dFWHMx -input %s -out %s' %
+                        (input_data, outname))
+    else:
+        cmdargs = split('3dFWHMx -mask %s -input %s -out %s' %
+                        (mask, input_data, outname))
+    call(cmdargs, stdout=f, stderr=STDOUT)
+    f.close()
+
+
+def clustsim(fwhm, outdir, mask=None):
+    """
+    Find the size of clusters by chance
+    """
+    print 'Running clustsim -- %s' % time.ctime()
+    stdout_dir = 'stdout_files'
+    if not os.path.exists(stdout_dir):
+        os.makedirs(stdout_dir)
+    f = open('%s/ClustSim_FWHM_%f_%f_%f_out.txt' %
+             (outdir, fwhm[0], fwhm[1], fwhm[2]), 'w')
+    if mask is None:
+        cmdargs = split('3dClustSim -fwhmxyz %f %f %f' %
+                        (fwhm[0], fwhm[1], fwhm[2]))
+    else:
+        cmdargs = split('3dClustSim -NN 123 -mask %s -fwhmxyz %f %f %f' %
+                        (mask, fwhm[0], fwhm[1], fwhm[2]))
+    call(cmdargs, stdout=f, stderr=STDOUT)
+    f.close()
+
+
+def mean_epi(ss, infile, work_dir, outpref):
+    """
+    Average across TS mean brain to get one mean image.
+    YOU SHOULD FIRST HAVE AN AVERAGE OF TS (MANY IMAGES)
+    THIS IS WHAT YOU MAKE MEAN (ONE IMAGE).
+    Serves registration purposes.
+    :param ss: Subject identifier
+    Writes to file AFNI mean brain (one image)
+    """
+    print 'Doing mean_epi for %s -- ' % ss
+    print time.ctime()
+    stdout_dir = os.path.join(work_dir, 'stdout_files')
+    if not os.path.exists(stdout_dir):
+        os.makedirs(stdout_dir)
+    f = open('%s/stdout_from_mean_epi.txt' % stdout_dir, 'w')
+    cmdargs = split('3dTstat -prefix %s -mean %s' % (outpref, infile))
+    call(cmdargs, stdout=f, stderr=STDOUT)
+    f.close()
