@@ -147,3 +147,18 @@ def mean_epi(ss, infile, work_dir, outpref):
     cmdargs = split('3dTstat -prefix %s -mean %s' % (outpref, infile))
     call(cmdargs, stdout=f, stderr=STDOUT)
     f.close()
+
+
+def maskdump(work_dir, mask, in_pref, out_pref, noijk=True):
+    stdout_dir = os.path.join(work_dir, 'stdout_files')
+    if not os.path.exists(stdout_dir):
+        os.makedirs(stdout_dir)
+    outf = open(out_pref, 'w')
+    f = open('%s/stdout_from_maskdump.txt' % stdout_dir, 'w')
+    if noijk is True:
+        cmdargs = split('3dmaskdump -mask %s -noijk %s' % (mask, in_pref))
+    else:
+        cmdargs = split('3dmaskdump -mask %s %s' % (mask, in_pref))
+    call(cmdargs, stdout=outf, stderr=f)
+    outf.close()
+    f.close()

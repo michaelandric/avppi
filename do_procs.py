@@ -12,14 +12,11 @@ if __name__ == '__main__':
     subj_list = range(1, 19)
 #    subj_list = [19]
 
-    decon_dir = os.path.join(os.environ['avp'], 'nii',
-                             'deconvolve_outs_concat')
-    insuff = 'Powered.cleanEPI_errts_REML+orig.'
-    outsuff = 'Powered.cleanEPI_errts_REML_mean'
-    for ss in subj_list:
-        fpref = 'decon_out.mion.%s_concat' % ss
-        fname = '%s.%s' % (fpref, insuff)
-        infile = os.path.join(decon_dir, fname)
-        outfname = '%s.%s' % (fpref, outsuff)
-        outfile = os.path.join(decon_dir, outfname)
-        pr.mean_epi(ss, infile, decon_dir, outfile)
+    group_dir = os.path.join(os.environ['avp'], 'nii',
+                             'group_effects')
+    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+    for ef in effects:
+        inpref = 'Clust_ttest_%s_mask+tlrc' % ef
+        clust_image = os.path.join(group_dir, inpref)
+        out_txt = os.path.join(group_dir, '%s.txt' % inpref)
+        pr.maskdump(group_dir, clust_image, clust_image, out_txt, 'False')
