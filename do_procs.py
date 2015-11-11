@@ -15,8 +15,10 @@ if __name__ == '__main__':
     group_dir = os.path.join(os.environ['avp'], 'nii',
                              'group_effects')
     effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+    mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
+                        'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
     for ef in effects:
         inpref = 'Clust_ttest_%s_mask+tlrc' % ef
         clust_image = os.path.join(group_dir, inpref)
         out_txt = os.path.join(group_dir, '%s.txt' % inpref)
-        pr.maskdump(group_dir, clust_image, clust_image, out_txt, 'False')
+        pr.maskdump(group_dir, mask, clust_image, out_txt)
