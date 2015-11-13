@@ -27,6 +27,6 @@ if __name__ == '__main__':
         for cn in conds:
             in_image = "'%s/decon_out.mion.%s_concat.%s.nii.gz[%d]'" % \
                 (decon_dir, ss, suff, d[cn])
-            out_txt = "'%s/%s_coef_%s_concat.%s.txt'" % \
+            out_txt = "%s/%s_coef_%s_concat.%s.txt" % \
                 (decon_dir, cn, ss, suff)
             pr.maskdump(ef_dir, mask, in_image, out_txt)

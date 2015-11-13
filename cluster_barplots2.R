@@ -1,11 +1,13 @@
 # plotting the coef effects for significant clusters
+
+# this version uses the 4 conditions (rather than main effects and interaction)
 setwd('/Users/andric/Documents/workspace/AVPPI/nii')
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
 # below brings in 'multiplot' function
 # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
-source('/Users/andric/Documents/workspace/AVPPI/code/mult_gplot.R')
+# source('/Users/andric/Documents/workspace/AVPPI/code/mult_gplot.R')
 
 subjects <- c()
 s_nums <- seq(1, 18)[seq(1,18) != 11]   # bcs ss 11 (and 19) no good 
@@ -17,19 +19,20 @@ for (s in s_nums)
 nr <- 262245   # corresponding common space number of voxels
 
 effects <- c('Aentr', 'Ventr', 'Aentr_intxn')
-
+conditions <- c('ALowVLow', 'ALowVHigh', 'AHighVLow', 'AHighVHigh')
 # read in the subj data for later use
-for (ef in effects)
+suffx <- paste('Powered.cleanEPI_REML_fnirted_MNI2mm.txt')
+for (cn in conditions)
 {
     subj_mat <- matrix(ncol=length(subjects), nrow=nr)
     for (i in 1:length(subjects))
     {
         ss <- subjects[i]
         subj_mat[, i] <- read.table(paste
-                                    (ss,'_effects/',ef,'_',ss,'_coef+tlrc.txt',
-                                     sep=''))$V1
+                                    ('deconvolve_outs_concat/',
+                                     cn,'_coef_',s_nums[i],'_concat.',suffx, sep=''))$V1
     }
-    ef_mat_name <- paste('subj_mat_', ef, sep='')
+    ef_mat_name <- paste('subj_mat_', cn, sep='')
     assign(ef_mat_name, subj_mat)
 }
 
@@ -51,12 +54,12 @@ for (ef in effects)
     total_unique_clusters <- total_unique_clusters + unique_clusters
     for (i in 1:unique_clusters)
     {
-        condition_vec <- rep(effects, each=length(subjects))
-        subjects_vec <- rep(subjects, length(effects))
+        condition_vec <- rep(conditions, each=length(subjects))
+        subjects_vec <- rep(subjects, length(conditions))
         subj_mean_vec <- c()
-        for (ef in effects)   # could change to conditions
+        for (cn in conditions)   # could change to conditions
         {
-            m <- get(paste('subj_mat_', ef, sep=''))
+            m <- get(paste('subj_mat_', cn, sep=''))
             for (s in 1:length(subjects))
             {
                 subj_mean_vec <- c(subj_mean_vec, mean(m[which(cl == i), s]))
@@ -64,17 +67,17 @@ for (ef in effects)
         }
         cluster_df <- tbl_df(data.frame
                              (subj_mean_vec, condition_vec, subjects_vec))
-        names(cluster_df) <- c('clustermean', 'effect', 'subj')
+        names(cluster_df) <- c('clustermean', 'condition', 'subj')
         plt_cnt = plt_cnt+1
-        bp <- ggplot(cluster_df, aes(effect, clustermean, fill=effect)) +
+        bp <- ggplot(cluster_df, aes(condition, clustermean, fill=conditions)) +
             geom_boxplot(outlier.size=3) + ggtitle(paste(main_ef, 'cluster', i)) +
-            xlab('effect') + ylab('means') + theme_bw()
+            xlab('Conditions') + ylab('Means') + theme_bw()
         print(bp)
         plots[[plt_cnt]] <- bp  # add each plot into plot list
     }
 }
 
-pdf('cluster_effect_plots.pdf')
+pdf('cluster_conditions_effect_plots.pdf')
 for (n in seq(total_unique_clusters))
 {
     print(plots[[n]])
