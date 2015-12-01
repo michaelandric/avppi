@@ -26,7 +26,7 @@ def ttest(stdoutdir, ss_list):
         f = open('%s/stdout_from_3dttest++_%s.txt' % (stdoutdir, ef), 'w')
         args = split('3dttest++ -setA %s -labelA %s \
                      -mask %s/MNI152_T1_2mm_brain_mask_dil1.nii.gz \
-                     -prefix %s/ttest_%s' %
+                     -prefix %s/ttest_flt3_%s' %
                      (a_sets, ef,
                       os.path.join(os.environ['FSLDIR'], 'data/standard'),
                       stdoutdir, ef))
@@ -36,7 +36,8 @@ def ttest(stdoutdir, ss_list):
 
 if __name__ == '__main__':
     subj_list = range(1, 20)
+    subj_list.remove(3)
+    subj_list.remove(5)
     subj_list.remove(11)
-    subj_list.remove(19)
     grp_eff_dir = os.path.join(os.environ['avp'], 'nii', 'group_effects')
     ttest(grp_eff_dir, subj_list)
