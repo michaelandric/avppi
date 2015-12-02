@@ -6,6 +6,7 @@ Created on Wed Dec  2 12:51:36 2015
 """
 
 import os
+import sys
 import logging
 import procs as pr
 
@@ -19,6 +20,7 @@ if __name__ == '__main__':
         logging.basicConfig(filename=os.path.join(anat_dir, logfilename),
                             level=logging.DEBUG)
         logging.info('Doing inv mat')
+        logging.StreamHandler(sys.stdout)
         stdout_dir = os.path.join(anat_dir, 'stdout_files')
         for r in range(1, 5):
             matfile = os.path.join(anat_dir,
