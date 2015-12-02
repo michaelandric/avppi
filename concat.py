@@ -21,8 +21,8 @@ if __name__ == '__main__':
         for n in ['wm', 'vent']:
             inputs = []
             for r in range(1, 5):
-                f = 'wm_v8.%s_%s.Powered.cleanEPI.uncensored.txt' % (ss, r)
+                f = '%s_v8.%s_%s.Powered.cleanEPI.uncensored.txt' % (n, ss, r)
                 inputs.append(os.path.join(workdir, f))
-            outn = 'wm_v8.%s_all.Powered.cleanEPI.uncensored.txt' % ss
+            outn = '%s_v8.%s_all.Powered.cleanEPI.uncensored.txt' % (n, ss)
             outf = os.path.join(workdir, outn)
             concat(inputs, outf)
