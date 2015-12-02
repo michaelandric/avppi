@@ -12,7 +12,9 @@ from shlex import split
 def concat(filelist, outname):
     files =  ' '.join(filelist)
     cmd = split('cat %s' % files)
-    call(cmd, stdout=outname)
+    f = open(outname, 'w')
+    call(cmd, stdout=f)
+    f.close()
 
 if __name__ == '__main__':
     subj_list = range(1, 20)
@@ -23,6 +25,7 @@ if __name__ == '__main__':
             for r in range(1, 5):
                 f = '%s_v8.%s_%s.Powered.cleanEPI.uncensored.txt' % (n, ss, r)
                 inputs.append(os.path.join(workdir, f))
+            print (inputs)
             outn = '%s_v8.%s_all.Powered.cleanEPI.uncensored.txt' % (n, ss)
             outf = os.path.join(workdir, outn)
             concat(inputs, outf)
