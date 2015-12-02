@@ -20,7 +20,7 @@ if __name__ == '__main__':
     extrt1 = os.path.join(anat_dir, 'T1_biascorr_brain.nii.gz')
     premat = os.path.join(anat_dir, '%s_3.2mprage.mat' % ss)
 
-    epi_pref = 'decon_out.mion.%s_concat.Powered.cleanEPI_errts_REML_mean' % ss
+    epi_pref = 'decon_out.mion.%s_concat.Powered.cleanEPI_REML' % ss
     epi_nii_pref = os.path.join(decon_dir, epi_pref)
     pr.converttoNIFTI(decon_dir, '%s+orig' % epi_nii_pref,
                       epi_nii_pref)
