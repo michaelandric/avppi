@@ -34,6 +34,7 @@ class masker(object):
                                     self.workdir, self.workdir,
                                     self.ss, self.workdir, self.ss))
         call(cmd)
+        logging.info('applywarp done')
 
     def get_msk(self):
         """
@@ -64,7 +65,7 @@ class masker(object):
         vent_msk[vol < vent_thr] = 1
         vent_msk = vent_msk.astype('int')
 
-        cmd3 = split('3dmaskdump -noijk \
+        cmd3 = split('3dmaskdump \
                      -mask %s/%s_fast_seg_2epi.nii.gz \
                      %s/%s_3.T12epi.nii.gz' %
                      (self.workdir, self.ss, self.workdir, self.ss))
@@ -86,6 +87,7 @@ class masker(object):
         vent_msk = pd.DataFrame(np.column_stack((xyz, vent_msk)))
         vent_msk.to_csv('%s/vent_mask_seed.txt' % self.workdir,
                         sep=' ', header=False, index=False)
+        logging.info('wm and vent masks written to file')
         
     def undump(self):
         for n in ['wm', 'vent']:
@@ -95,13 +97,15 @@ class masker(object):
                         (self.workdir, n, self.workdir, self.ss,
                          self.workdir, n))
             call(cmd)
+            logging.info('3dUndump done.')
 
 
-def maskave(workdir, mask, ts, outfile):
-    cmd = split('3dmaskave -mask %s %s' % (workdir))
+def maskave(mask, ts, outfile):
+    cmd = split('3dmaskave -quiet -mask %s %s' % (mask, ts))
     f = open(outfile, 'w')
     call(cmd, stdout=f)
     f.close()
+    logging.info('3dmaskave done.')
 
 
 if __name__ == '__main__':
@@ -111,7 +115,8 @@ if __name__ == '__main__':
         workdir = os.path.join(os.environ['avp'], 'nii', '%s_CNR.anat' % ss)
         logging.basicConfig(filename='%s/seed_masks.log' % workdir,
                             level=logging.DEBUG)
-        logging.StreamHandler(sys.stdout)
+        lg = logging.StreamHandler(sys.stdout)
+        lg.setLevel(logging.DEBUG)
 
         m = masker(ss, workdir)
         m.applywarp()
@@ -127,5 +132,5 @@ if __name__ == '__main__':
                 outf = os.path.join(os.environ['avp'], 'nii',
                                     '%s_CNR.anat' % ss, outmasktsname)
                 mask = os.path.join(workdir, '%s_mask_seed.nii.gz' % n)
-                maskave(workdir, mask, ts_file, outf)
+                maskave(mask, ts_file, outf)
         
