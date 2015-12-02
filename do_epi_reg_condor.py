@@ -13,7 +13,7 @@ if __name__ == '__main__':
     ss = int(sys.argv[1])
 
     decon_dir = os.path.join(os.environ['avp'],
-                             'nii', 'deconvolve_outs_concat')
+                             'nii', 'deconvolve_outs_concat_dec')
     vol_dir_pref = 'nii/%s_CNR.anat' % ss
     anat_dir = os.path.join(os.environ['avp'], vol_dir_pref)
     wholet1 = os.path.join(anat_dir, 'T1_biascorr.nii.gz')

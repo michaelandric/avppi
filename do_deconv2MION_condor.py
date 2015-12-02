@@ -80,16 +80,16 @@ if __name__ == '__main__':
         inputs.append(infile)
     inputs = ' '.join(inputs)
     decon_outdir = os.path.join(os.environ['avp'],
-                                'nii', 'deconvolve_outs_concat')
+                                'nii', 'deconvolve_outs_concat_dec')
 
     outpref = 'decon_out.mion.%s_concat.Powered.cleanEPI' % ss
     sfx = 'Powered.cleanEPI.uncensored.txt'
     wm_name = 'wm_v8.%s_all.%s' % (ss, sfx)
     wm_file = os.path.join(os.environ['avp'], 'nii',
-                           '%_CNR.anat' % (ss, wm_name))
+                           '%s_CNR.anat' % ss, wm_name)
     vent_name = 'vent_v8.%s_all.%s' % (ss, sfx)
     vent_file = os.path.join(os.environ['avp'], 'nii',
-                             '%_CNR.anat' % (ss, vent_name))
+                             '%s_CNR.anat' % ss, vent_name)
     cf = os.path.join(os.environ['avp'], 'nii',
                       'all_ts.%s.Powered.censor.1D' % ss)
     outfile = os.path.join(decon_outdir, outpref)

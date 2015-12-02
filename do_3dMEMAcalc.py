@@ -31,7 +31,7 @@ def calc3d_4cond(stdoutdir, ss, input):
         elif tt is 'tstat':
             sb = [5, 8, 11, 14]
         d = dict(zip(conds, sb))
-        print 'doing Subj %s -- %s... \n' % (ss, tt)
+        print('doing Subj %s -- %s... \n' % (ss, tt))
         f = open('%s/stdout_from_3dcalc.txt' % stdoutdir, 'w')
         A_ef_args = "3dcalc -a '%s[%d]' -b '%s[%d]' -c '%s[%d]' -d '%s[%d]' \
                     -expr '(a+b)-(c+d)' -prefix %s/Aentr_ss%s_%s" % \
@@ -84,7 +84,7 @@ def mema(stdoutdir, ss_list):
         mema_args = '3dMEMA -jobs 4 -prefix %s/%s_mema \
                     -set %s %s -missing_data 0' % \
                     (stdoutdir, ef, ef, diff_set)
-        print ''.join(mema_args)
+        print (''.join(mema_args))
         call(['echo', ' '.join(mema_args)], stdout=f)
         call(mema_args, stdout=f, stderr=STDOUT, shell=True)
         f.close()
@@ -110,7 +110,7 @@ def mema2(stdoutdir, ss_list):
                     -set %s %s -max_zeros 0.25 \
                     -model_outliers -residual_Z' % \
                     (stdoutdir, ef, ef, diff_set)
-        print ''.join(mema_args)
+        print (''.join(mema_args))
         call(['echo', ''.join(mema_args)], stdout=f)
         call(mema_args, stdout=f, stderr=STDOUT, shell=True)
         f.close()
@@ -121,7 +121,8 @@ if __name__ == '__main__':
     subj_list.remove(11)
     subj_list.remove(19)
 
-    decondir = os.path.join(os.environ['avp'], 'nii', 'deconvolve_outs_concat')
+    decondir = os.path.join(os.environ['avp'], 'nii',
+                            'deconvolve_outs_concat_dec')
 #    conds = ['ALowVLow', 'ALowVHigh', 'AHighVLow', 'AHighVHigh']
     f_suffx = 'Powered.cleanEPI_REML_fnirted_MNI2mm.nii.gz'
     for ss in subj_list:
@@ -132,6 +133,6 @@ if __name__ == '__main__':
             os.makedirs(fx_dir)
 #        calc3d_4cond(fx_dir, ss, infile)
 
-    groupdir = os.path.join(os.environ['avp'], 'nii', 'group_effects')
+    groupdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
 #    mema(groupdir, subj_list)
     mema2(groupdir, subj_list)
