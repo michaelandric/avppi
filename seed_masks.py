@@ -27,10 +27,12 @@ class masker(object):
         """
         This is done to get the fast segmentations in epi space
         """
-        cmd = split("applywarp -v --ref=%s_3.vol8.nii.gz \
-                    --in=T1_fast_seg.nii.gz --postmat=mprage2.%s_3.mat \
-                    --out=%s_fast_seg_2epi \
-                    --interp=nn" % (self.ss, self.ss, self.ss))
+        cmd = split("applywarp -v --ref=%s/%s_3.vol8.nii.gz \
+                    --in=%s/T1_fast_seg.nii.gz --postmat=%s/mprage2.%s_3.mat \
+                    --out=%s/%s_fast_seg_2epi \
+                    --interp=nn" % (self.workdir, self.ss,
+                                    self.workdir, self.workdir,
+                                    self.ss, self.workdir, self.ss))
         call(cmd)
 
     def get_msk(self):
