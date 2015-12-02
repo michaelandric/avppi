@@ -12,12 +12,15 @@ import procs as pr
 if __name__ == '__main__':
     subj_list = [1]
     for ss in subj_list:
-        logfilename = '%s_makeinvmat.log' % ss
         vol_dir_pref = '%s_CNR.anat' % ss
         anat_dir = os.path.join(os.environ['avp'], 'nii', vol_dir_pref)
-        logging.basicConfig(filename=os.path.join(anat_dir, logfilename))
+
+        logfilename = '%s_makeinvmat.log' % ss
+        logging.basicConfig(filename=os.path.join(anat_dir, logfilename),
+                            level=logging.DEBUG)
+        logging.info('Doing inv mat')
         stdout_dir = os.path.join(anat_dir, 'stdout_files')
-        for r in range(1, 4):
+        for r in range(1, 5):
             matfile = os.path.join(anat_dir,
                                    '%s_%s.2mprage.mat' % (ss, r))
             inv_mat = os.path.join(anat_dir,
