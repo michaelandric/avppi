@@ -7,12 +7,12 @@ Created on Wed Dec  2 18:38:22 2015
 
 import os
 from subprocess import call
-from shelx import split
+from shlex import split
 
 def concat(filelist, outname):
     files =  ' '.join(filelist)
-    cmd = split('cat %s > %s' % (files, outname))
-    call(cmd)
+    cmd = split('cat %s' % files)
+    call(cmd, stdout=outname)
 
 if __name__ == '__main__':
     subj_list = range(1, 20)
