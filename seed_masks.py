@@ -133,4 +133,3 @@ if __name__ == '__main__':
                                     '%s_CNR.anat' % ss, outmasktsname)
                 mask = os.path.join(workdir, '%s_mask_seed.nii.gz' % n)
                 maskave(mask, ts_file, outf)
-        
