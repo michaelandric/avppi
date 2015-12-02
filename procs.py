@@ -7,6 +7,7 @@ Created on Fri Sep 18 16:03:24 2015
 
 import os
 import time
+import logging
 from shlex import split
 from subprocess import call, STDOUT
 
@@ -15,7 +16,7 @@ def applywarp(workdir, input, extrt1, out, premat, interp=None):
     """
     general procedure for applywarp
     """
-    print 'Doing applywarp'
+    print ('Doing applywarp')
     stdoutdir = os.path.join(workdir, 'stdout_files')
     if not os.path.exists(stdoutdir):
         os.makedirs(stdoutdir)
@@ -34,7 +35,7 @@ def applywarpFLIRT(ss, work_dir, input, extrt1, out, premat, interp=None):
     """
     Warp via linear transformation via fsl FLIRT
     """
-    print 'doing applywarpFLIRT for %s -- ' % ss+time.ctime()
+    print ('doing applywarpFLIRT for %s -- ' % ss+time.ctime())
     stdout_dir = os.path.join(work_dir, 'stdout_files')
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -53,7 +54,7 @@ def applywarpFNIRT(ss, work_dir, input, out, coeff, interp=None):
     """
     Warp via nonlinear transformation via fsl FNIRT
     """
-    print 'Doing applywarpFNIRT for %s -- ' % ss+time.ctime()
+    print ('Doing applywarpFNIRT for %s -- ' % ss+time.ctime())
     stdout_dir = os.path.join(work_dir, 'stdout_files')
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -76,7 +77,7 @@ def converttoNIFTI(work_dir, brain, prefix=None):
     """
     convert AFNI file to NIFTI
     """
-    print 'Doing converttoNIFTI for %s -- ' % brain+time.ctime()
+    print ('Doing converttoNIFTI for %s -- ' % brain+time.ctime())
     stdout_dir = os.path.join(work_dir, 'stdout_files')
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -94,7 +95,7 @@ def fwhm_est(input_data, outname, mask=None):
     Estiamte FWHM of data
     Will return FWHM
     """
-    print 'Doing fwhm_est -- %s' % time.ctime()
+    print ('Doing fwhm_est -- %s' % time.ctime())
     stdout_dir = 'stdout_files'
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -113,7 +114,7 @@ def clustsim(fwhm, outdir, mask=None):
     """
     Find the size of clusters by chance
     """
-    print 'Running clustsim -- %s' % time.ctime()
+    print ('Running clustsim -- %s' % time.ctime())
     stdout_dir = 'stdout_files'
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -138,8 +139,8 @@ def mean_epi(ss, infile, work_dir, outpref):
     :param ss: Subject identifier
     Writes to file AFNI mean brain (one image)
     """
-    print 'Doing mean_epi for %s -- ' % ss
-    print time.ctime()
+    print ('Doing mean_epi for %s -- ' % ss)
+    print (time.ctime())
     stdout_dir = os.path.join(work_dir, 'stdout_files')
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir)
@@ -161,4 +162,45 @@ def maskdump(work_dir, mask, in_pref, out_pref, noijk=True):
         cmdargs = split('3dmaskdump -mask %s %s' % (mask, in_pref))
     call(cmdargs, stdout=outf, stderr=f)
     outf.close()
+    f.close()
+
+def convert_inversemat(matfile, outfile, stdf=None):
+    if stdf is not None:
+        stdout_dir = 'stdout_files'
+        if not os.path.exists(stdout_dir):
+            os.makedirs(stdout_dir)
+    cmdargs = split('convert_xfm -omat %s -inverse %s' % (outfile, matfile))
+    if stdf is not None:
+        f = open(stdf, 'w')
+        call(cmdargs, stdout=f, stderr=STDOUT)
+        f.close()
+    else:
+        call(cmdargs)
+
+def mnispace_to_origspace(stdout, matfile, invmat,
+                          rev_fnirt, flirtd_brain,
+                          region_msk, coeff,
+                          region_msk_out_flirt, region_msk_out_orig,
+                          msk_frac_bin_orig, final_msk_outpref):
+    """
+    1. convert flirt mat to inverse
+    2. use invwarp to get inverse of warp (fnirt'd)
+    3. applywarp
+    """
+    convert_inversemat(matfile, invmat)
+    f = open('%s/stdout_from_mnispace_to_origspace.txt' % stdout, 'w')
+#    inv_args = split('invwarp --ref=%s --warp=%s --out=%s' %
+#                     (flirtd_brain, coeff, rev_fnirt))
+#    call(inv_args, stdout=f, stderr=STDOUT)
+    cmdargs1 = split('applywarp --ref=%s --in=%s --warp=%s \
+                    --out=%s --interp=nn' %
+                     (flirtd_brain, region_msk, rev_fnirt,
+                      region_msk_out_flirt))
+    call(cmdargs1, stdout=f, stderr=STDOUT)
+    cmdargs2 = split('applywarp --ref=%s --in=%s --postmat=%s \
+                     --out=%s --interp=nn' %
+                     (msk_frac_bin_orig, region_msk_out_flirt,
+                      invmat, region_msk_out_orig))
+    call(cmdargs2, stdout=f, stderr=STDOUT)
+    maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
