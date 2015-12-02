@@ -14,7 +14,7 @@ from shlex import split
 from subprocess import call, STDOUT
 
 
-def deconv(stdoutdir, inputset, seq, censorf, outpref):
+def deconv(stdoutdir, inputset, seq, censorf, wmfile, ventfile, outpref):
     """
     3dDeconvolve with multiple inputs
     There are 4 inputs
@@ -29,7 +29,7 @@ def deconv(stdoutdir, inputset, seq, censorf, outpref):
     deconargs = split("3dDeconvolve -jobs 2 -input %s \
                       -force_TR 1.5 -polort A \
                       -censor %s \
-                      -nodmbase -num_stimts 6 \
+                      -nodmbase -num_stimts 8 \
                       -stim_times 1 %s 'GAM' \
                       -stim_label 1 fixate \
                       -stim_times 2 %s 'MION(30)' \
@@ -42,6 +42,10 @@ def deconv(stdoutdir, inputset, seq, censorf, outpref):
                       -stim_label 5 AHighVHigh \
                       -stim_times 6 %s 'GAM' \
                       -stim_label 6 catch \
+                      -stim_file 7 %s \
+                      -stim_label 7 WM \
+                      -stim_file 8 %s \
+                      -stim_label 8 VENT \
                       -gltsym 'SYM: +ALowVLow' -glt_label 1 ALowVLow_glt \
                       -gltsym 'SYM: +ALowVHigh' -glt_label 2 ALowVHigh_glt \
                       -gltsym 'SYM: +AHighVLow' -glt_label 3 AHighVLow_glt \
@@ -53,7 +57,7 @@ def deconv(stdoutdir, inputset, seq, censorf, outpref):
                       -fout -tout -errts %s_errts -bucket %s -x1D %s.xmat.1D" %
                       (inputset, censorf, sf_list[0], sf_list[1], sf_list[2],
                        sf_list[3], sf_list[4], sf_list[5],
-                       outpref, outpref, outpref))
+                       wmfile, ventfile, outpref, outpref, outpref))
     call(deconargs, stdout=f, stderr=STDOUT)
     f.close()
 
@@ -79,8 +83,14 @@ if __name__ == '__main__':
                                 'nii', 'deconvolve_outs_concat')
 
     outpref = 'decon_out.mion.%s_concat.Powered.cleanEPI' % ss
-
+    sfx = 'Powered.cleanEPI.uncensored.txt'
+    wm_name = 'wm_v8.%s_all.%s' % (ss, sfx)
+    wm_file = os.path.join(os.environ['avp'], 'nii',
+                           '%_CNR.anat' % ss, wm_name)
+    vent_name = 'vent_v8.%s_all.%s' % (ss, sfx)
+    vent_file = os.path.join(os.environ['avp'], 'nii',
+                             '%_CNR.anat' % ss, vent_name)
     cf = os.path.join(os.environ['avp'], 'nii',
                       'all_ts.%s.Powered.censor.1D' % ss)
     outfile = os.path.join(decon_outdir, outpref)
-    deconv(decon_outdir, inputs, seq, cf, outfile)
+    deconv(decon_outdir, inputs, seq, cf, wm_file, vent_file, outfile)
