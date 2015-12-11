@@ -74,14 +74,14 @@ def mema(stdoutdir, ss_list):
         diff_set = []
         for s in ss_list:
             dat_dir = os.path.join(os.environ['avp'], 'nii',
-                                   'ss%s_effects' % s)
+                                   'ss%s_effects_dec' % s)
             coeff = os.path.join(dat_dir, '%s_ss%s_coef+tlrc' % (ef, s))
             tstatf = os.path.join(dat_dir, '%s_ss%s_tstat+tlrc' % (ef, s))
             diff_set.append('%d %s %s' %
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         f = open('%s/stdout_from_3dmema_%s.txt' % (stdoutdir, ef), 'w')
-        mema_args = '3dMEMA -jobs 4 -prefix %s/%s_mema \
+        mema_args = '3dMEMA -jobs 16 -prefix %s/%s_flt2_mema \
                     -set %s %s -missing_data 0' % \
                     (stdoutdir, ef, ef, diff_set)
         print (''.join(mema_args))
@@ -99,14 +99,14 @@ def mema2(stdoutdir, ss_list):
         diff_set = []
         for s in ss_list:
             dat_dir = os.path.join(os.environ['avp'], 'nii',
-                                   'ss%s_effects' % s)
+                                   'ss%s_effects_dec' % s)
             coeff = os.path.join(dat_dir, '%s_ss%s_coef+tlrc' % (ef, s))
             tstatf = os.path.join(dat_dir, '%s_ss%s_tstat+tlrc' % (ef, s))
             diff_set.append('%d %s %s' %
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         f = open('%s/stdout_from_3dmema_%s.txt' % (stdoutdir, ef), 'w')
-        mema_args = '3dMEMA -jobs 4 -prefix %s/%s_mema2 \
+        mema_args = '3dMEMA -jobs 16 -prefix %s/%s_flt2_mema2 \
                     -set %s %s -max_zeros 0.25 \
                     -model_outliers -residual_Z' % \
                     (stdoutdir, ef, ef, diff_set)
@@ -117,9 +117,9 @@ def mema2(stdoutdir, ss_list):
 
 
 if __name__ == '__main__':
-    subj_list = range(1, 20)
+    subj_list = [s for s in range(1, 20)]
+    subj_list.remove(3)
     subj_list.remove(11)
-    subj_list.remove(19)
 
     decondir = os.path.join(os.environ['avp'], 'nii',
                             'deconvolve_outs_concat_dec')
@@ -134,5 +134,5 @@ if __name__ == '__main__':
 #        calc3d_4cond(fx_dir, ss, infile)
 
     groupdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
-#    mema(groupdir, subj_list)
+    mema(groupdir, subj_list)
     mema2(groupdir, subj_list)
