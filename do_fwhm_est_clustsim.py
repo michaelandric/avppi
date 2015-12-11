@@ -27,7 +27,7 @@ def get_fwhm_acf(input):
     """
     cmds = split('3dFWHMx -input %s -ACF' % (input))
     p = Popen(cmds, stdout=PIPE).communicate()
-    return map(float, p[0].split('\n')[3].split())
+    return map(float, p[0].decode('utf-8', 'strict').split('\n')[3].split())
 
 subj_list = [s for s in range(1, 20)]
 subj_list.remove(3)
