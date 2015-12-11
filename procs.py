@@ -207,7 +207,7 @@ def mnispace_to_origspace(stdout, matfile, invmat,
     maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
 
-def vol2surf_mni(logf=None, work_dir, hemi, parent, pn, outname):
+def vol2surf_mni(work_dir, hemi, parent, pn, outname, logf=None):
     """
     Project to MNI surf.
     Make sure 'suma_dir' is set right

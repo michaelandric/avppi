@@ -22,12 +22,12 @@ def get_fwhm(input):
     return map(float, p[0].split())
 
 
-subj_list = range(1, 20)
+subj_list = [s for s in range(1, 20)]
 subj_list.remove(3)
 subj_list.remove(11)
 xyz_mat = np.zeros(len(subj_list)*3).reshape(len(subj_list), 3)
 decon_dir = os.path.join(os.environ['avp'],
-                         'nii', 'deconvolve_outs_concat')
+                         'nii', 'deconvolve_outs_concat_dec')
 suff = 'Powered.cleanEPI_errts_REML_mean_fnirted_MNI2mm'
 lg = setLog._log('%s/fwhm_est_clustsim' % decon_dir)
 lg.info('Doing get_fwhm')
