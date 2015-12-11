@@ -9,6 +9,7 @@ import os
 import time
 import logging
 import setLog
+import inspect
 from shlex import split
 from subprocess import call, STDOUT
 import subprocess
@@ -234,3 +235,19 @@ def vol2surf_mni(work_dir, hemi, parent, pn, outname, logf=None):
     p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
     lg.info(p.stderr.decode("utf-8", "strict"))
     lg.info("Done with vol2surf_mni")
+
+def cluster(vx_thr, clst_thr, infile, outpref, logf=None):
+    """
+    do 3dclust
+    """
+    if logf:
+        lg = setLog._log(logf)
+    lg.info("doing cluster (3dclust): \n%s" % infile)
+    cmd = split("3dclust -prefix %s -1Dformat -nosum \
+                -1dindex 1 -1tindex 1 -2thresh -%s %s \
+                -dxyz=1 1.44 %s %s" %
+                (outpref, vx_thr, vx_thr, clst_thr, infile))
+    lg.info("Command: \n%s" % cmd)
+    p = subprocess.run(cmd, stderr=subprocess.PIPE)
+    lg.info(p.stderr.decode("utf-8", "strict"))
+    lg.info("Done with cluster (3dclust).")

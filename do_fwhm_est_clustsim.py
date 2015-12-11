@@ -41,7 +41,7 @@ lg.info('get_fwhm done.')
 
 avg_fwhm = np.mean(xyz_mat, axis=0)
 lg.info('FWHM is: %s' % avg_fwhm)
-out_pref = 'fwhm_est_decon_out.mion.group.%s_out' % suff
+out_pref = 'fwhm_est_decon_out.mion.group.%s_af15_out' % suff
 out_name = os.path.join(decon_dir, out_pref)
 np.savetxt(out_name, avg_fwhm.reshape(1, 3), fmt='%.4f %.4f %.4f')
 lg.info('saved FWHM to %s' % out_name)

@@ -11,7 +11,7 @@ import subprocess
 from shlex import split
 
 if __name__ == '__main__':
-    logf = os.path.join(os.environ['hel'], 'nii', 'group_effects_dec',
+    logf = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec',
                         'project_to_surf')
 
     for hemi in ['lh', 'rh']:
