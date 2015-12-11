@@ -81,9 +81,12 @@ def mema(stdoutdir, ss_list):
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         f = open('%s/stdout_from_3dmema_%s.txt' % (stdoutdir, ef), 'w')
-        mema_args = '3dMEMA -jobs 16 -prefix %s/%s_all_mema \
+        mema_args = '3dMEMA -jobs 20 -prefix %s/%s_flt2_msk_mema \
+                    -mask %s/MNI152_T1_2mm_brain_mask_dil1.nii.gz \
                     -set %s %s -missing_data 0 -residual_Z' % \
-                    (stdoutdir, ef, ef, diff_set)
+                    (stdoutdir, ef,
+                     os.path.join(os.environ['FSLDIR'], 'data/standard'),
+                     ef, diff_set)
         print (''.join(mema_args))
         call(['echo', ' '.join(mema_args)], stdout=f)
         call(mema_args, stdout=f, stderr=STDOUT, shell=True)
@@ -106,10 +109,13 @@ def mema2(stdoutdir, ss_list):
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         f = open('%s/stdout_from_3dmema_%s.txt' % (stdoutdir, ef), 'w')
-        mema_args = '3dMEMA -jobs 16 -prefix %s/%s_all_mema2 \
+        mema_args = '3dMEMA -jobs 20 -prefix %s/%s_flt2_msk_mema2 \
+                    -mask %s/MNI152_T1_2mm_brain_mask_dil1.nii.gz \
                     -set %s %s -max_zeros 0.25 \
                     -model_outliers -residual_Z' % \
-                    (stdoutdir, ef, ef, diff_set)
+                    (stdoutdir, ef,
+                     os.path.join(os.environ['FSLDIR'], 'data/standard'),
+                     ef, diff_set)
         print (''.join(mema_args))
         call(['echo', ''.join(mema_args)], stdout=f)
         call(mema_args, stdout=f, stderr=STDOUT, shell=True)
@@ -118,8 +124,8 @@ def mema2(stdoutdir, ss_list):
 
 if __name__ == '__main__':
     subj_list = [s for s in range(1, 20)]
-#    subj_list.remove(3)
-#    subj_list.remove(11)
+    subj_list.remove(3)
+    subj_list.remove(11)
 
     decondir = os.path.join(os.environ['avp'], 'nii',
                             'deconvolve_outs_concat_dec')
