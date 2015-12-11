@@ -8,8 +8,10 @@ Created on Fri Sep 18 16:03:24 2015
 import os
 import time
 import logging
+import setLog
 from shlex import split
 from subprocess import call, STDOUT
+import subprocess
 
 
 def applywarp(workdir, input, extrt1, out, premat, interp=None):
@@ -204,3 +206,31 @@ def mnispace_to_origspace(stdout, matfile, invmat,
     call(cmdargs2, stdout=f, stderr=STDOUT)
     maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
+
+def vol2surf_mni(logf=None, work_dir, hemi, parent, pn, outname):
+    """
+    Project to MNI surf.
+    Make sure 'suma_dir' is set right
+    """
+    if logf:
+        lg = setLog._log(logf)
+    lg.info("vol2surf_mni starting")
+    suma_dir = '/mnt/lnif-storage/urihas/software/AFNI2015/suma_MNI_N27'
+    spec_fname = 'MNI_N27_%s.spec' % hemi
+    spec = os.path.join(suma_dir, spec_fname)
+    surf_a = '%s.smoothwm.gii' % hemi
+    surf_b = '%s.pial.gii' % hemi
+    surfvol_name = 'MNI_N27_SurfVol.nii'
+    sv = os.path.join(suma_dir, surfvol_name)
+    cmdargs = split('3dVol2Surf -spec %s \
+                    -surf_A %s -surf_B %s \
+                    -sv %s -grid_parent %s \
+                    -map_func max -f_steps 10 -f_index voxels \
+                    -f_p1_fr -%s -f_pn_fr %s \
+                    -outcols_NSD_format -oob_index -1 -oob_value 0.0 \
+                    -out_1D %s' % (spec, surf_a, surf_b, sv,
+                                   parent, pn, pn, outname))
+    lg.info("Command: \n%s" % cmdargs)
+    p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
+    lg.info(p.stderr.decode("utf-8", "strict"))
+    lg.info("Done with vol2surf_mni")

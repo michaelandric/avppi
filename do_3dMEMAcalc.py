@@ -128,7 +128,7 @@ if __name__ == '__main__':
     for ss in subj_list:
         inpref = 'decon_out.mion.%s_concat' % ss
         infile = os.path.join(decondir, '%s.%s' % (inpref, f_suffx))
-        fx_dir = os.path.join(os.environ['avp'], 'nii', 'ss%s_effects' % ss)
+        fx_dir = os.path.join(os.environ['avp'], 'nii', 'ss%s_effects_dec' % ss)
         if not os.path.exists(fx_dir):
             os.makedirs(fx_dir)
 #        calc3d_4cond(fx_dir, ss, infile)
