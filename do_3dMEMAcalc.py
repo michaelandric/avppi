@@ -82,7 +82,7 @@ def mema(stdoutdir, ss_list):
         diff_set = ' '.join(diff_set)
         f = open('%s/stdout_from_3dmema_%s.txt' % (stdoutdir, ef), 'w')
         mema_args = '3dMEMA -jobs 16 -prefix %s/%s_all_mema \
-                    -set %s %s -missing_data 0' % \
+                    -set %s %s -missing_data 0 -residual_Z' % \
                     (stdoutdir, ef, ef, diff_set)
         print (''.join(mema_args))
         call(['echo', ' '.join(mema_args)], stdout=f)
