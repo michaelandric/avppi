@@ -132,6 +132,24 @@ def clustsim(fwhm, outdir, mask=None):
     call(cmdargs, stdout=f, stderr=STDOUT)
     f.close()
 
+def clustsim_acf(acf, outdir, mask=None):
+    """
+    Find the size of clusters by chance
+    """
+    print ('Running clustsim -- %s' % time.ctime())
+    stdout_dir = 'stdout_files'
+    if not os.path.exists(stdout_dir):
+        os.makedirs(stdout_dir)
+    f = open('%s/ClustSim_FWHM_%f_%f_%f_af15_out.txt' %
+             (outdir, acf[0], acf[1], acf[2]), 'w')
+    if mask is None:
+        cmdargs = split('3dClustSim -NN 123 -acf %f %f %f' %
+                        (acf[0], acf[1], acf[2]))
+    else:
+        cmdargs = split('3dClustSim -NN 123 -mask %s -acf %f %f %f' %
+                        (mask, acf[0], acf[1], acf[2]))
+    call(cmdargs, stdout=f, stderr=STDOUT)
+    f.close()
 
 def mean_epi(ss, infile, work_dir, outpref):
     """
