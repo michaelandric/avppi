@@ -33,7 +33,7 @@ subj_list = [s for s in range(1, 20)]
 subj_list.remove(3)
 subj_list.remove(11)
 xyz_mat = np.zeros(len(subj_list)*3).reshape(len(subj_list), 3)
-abc_mat = np.zeros(len(subj_list)*3).reshape(len(subj_list), 3)
+abc_mat = np.zeros(len(subj_list)*4).reshape(len(subj_list), 4)
 decon_dir = os.path.join(os.environ['avp'],
                          'nii', 'deconvolve_outs_concat_dec')
 suff = 'Powered.cleanEPI_errts_REML_mean_fnirted_MNI2mm'
@@ -47,13 +47,14 @@ for i, ss in enumerate(subj_list):
 #    xyz_mat[i, :] = [x, y, z]
     a, b, c, cmb_fwhm = get_fwhm_acf('%s.nii.gz' % input_pref)
     lg.info('a b c and fwhm: %s %s %s %s' % (a, b, c, cmb_fwhm))
-    abc_mat[i, :] = [a, b, c]
+    abc_mat[i, :] = [a, b, c, cmb_fwhm]
 lg.info('get_fwhm done.')
 
 #avg_fwhm = np.mean(xyz_mat, axis=0)
 avg_acf = np.mean(abc_mat, axis=0)
+lg.info('averages: %s' % avg_acf)
+avg_acf = avg_acf[:3]
 #lg.info('FWHM is: %s' % avg_fwhm)
-lg.info('FWHM is: %s' % avg_acf)
 out_pref = 'fwhm_est_decon_out.mion.group.%s_acf_out' % suff
 out_name = os.path.join(decon_dir, out_pref)
 #np.savetxt(out_name, avg_fwhm.reshape(1, 3), fmt='%.4f %.4f %.4f')
