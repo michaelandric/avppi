@@ -84,12 +84,12 @@ def mema(stdoutdir, ss_list):
             diff_set.append('%d %s %s' %
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
-        mask = os.path.join(os.environ['FSLDIR'], 'data/standard/',
-                            'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
-        mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt3_msk_mema \
+        mask = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec',
+                            'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
+        mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt2_msk_mema \
                           -mask %s -set %s %s -missing_data 0 -residual_Z' %
                           (stdoutdir, ef, mask, ef, diff_set))
-        lg.debug('args for 3dMEMA: \n%s' % mema_args)
+        lg.info('args for 3dMEMA: \n%s' % mema_args)
         lg.info('Running 3dMEMA ...')
         p = subprocess.run(mema_args, stderr=subprocess.PIPE)
         lg.info(p.stderr.decode("utf-8", "strict"))
@@ -114,14 +114,14 @@ def mema2(stdoutdir, ss_list):
             diff_set.append('%d %s %s' %
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
-        mask = os.path.join(os.environ['FSLDIR'], 'data/standard/',
-                            'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
+        mask = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec',
+                            'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
         mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt3_msk_mema2 \
                           -mask %s/MNI152_T1_2mm_brain_mask_dil1.nii.gz \
                           -set %s %s -max_zeros 0.25 \
                           -model_outliers -residual_Z' %
                           (stdoutdir, ef, mask, ef, diff_set))
-        lg.debug('args for 3dMEMA: \n%s' % mema_args)
+        lg.info('args for 3dMEMA: \n%s' % mema_args)
         lg.info('Running 3dMEMA ...')
         p = subprocess.run(mema_args, stderr=subprocess.PIPE)
         lg.info(p.stderr.decode("utf-8", "strict"))
@@ -131,7 +131,6 @@ def mema2(stdoutdir, ss_list):
 if __name__ == '__main__':
     subj_list = [s for s in range(1, 20)]
     subj_list.remove(3)
-    subj_list.remove(5)
     subj_list.remove(11)
 
     decondir = os.path.join(os.environ['avp'], 'nii',
@@ -148,4 +147,4 @@ if __name__ == '__main__':
 
     groupdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
     mema(groupdir, subj_list)
-    mema2(groupdir, subj_list)
+#    mema2(groupdir, subj_list)
