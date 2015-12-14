@@ -45,10 +45,10 @@ def cluster(outdir, thr, clst_size, infile, outname):
     """
     lg = setLog._log('%s/clustering' % outdir)
     lg.info('Doing cluster ---- ')
-    cmd = split(('3dclust -1Dformat -nosum -1dindex 1 -itindex 1 \
+    cmd = split(('3dclust -prefix %s -1Dformat -nosum -1dindex 1 -1tindex 1 \
                  -2thresh -%s %s \
-                 -dxyz=1 1.01 %s %s -prefix %s') %
-                 (thr, thr, clst_size, infile, outname))
+                 -dxyz=1 1.01 %s %s -savemask %s_mask') %
+                 (outname, thr, thr, clst_size, infile, outname))
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     lg.info(p.stdout.decode("utf-8", "strict"))
     lg.info('cluster is done.')
@@ -57,10 +57,10 @@ def cluster(outdir, thr, clst_size, infile, outname):
 if __name__ == '__main__':
     fwhmx = np.array((8.054140, 8.238027, 8.247797))
     outdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
-    estimate_clustersizes(fwhmx)
+#    estimate_clustersizes(fwhmx, outdir)
 
-    effects = ['Aentr', 'Ventr', 'Aentr_intxn', 'Ventr_intxn']
+    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
     for ef in effects:
         infile = os.path.join(outdir, '%s_flt2_msk_mema+tlrc.HEAD' % ef)
-        outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema')
-#        cluster(outdir, 2.92, 210, infile, outname)
+        outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema' % ef)
+        cluster(outdir, 2.92, 210, infile, outname)
