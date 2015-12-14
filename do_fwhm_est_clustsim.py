@@ -45,7 +45,7 @@ for i, ss in enumerate(subj_list):
                         '%s_3' % ss, '%s_3.Powered.mask.brain+orig' % ss)
     fpref = 'decon_out.mion.%s_concat.%s' % (ss, suff)
     input_pref = os.path.join(decon_dir, fpref)
-    x, y, z = get_fwhm('%s.nii.gz' % input_pref)
+    x, y, z = get_fwhm(mask, '%s+orig' % input_pref)
     lg.info('fwhm x y z: %s %s %s ' % (x, y, z))
     xyz_mat[i, :] = [x, y, z]
 #    a, b, c, cmb_fwhm = get_fwhm_acf(mask, '%s+orig' % input_pref)

@@ -118,7 +118,7 @@ def mema2(stdoutdir, ss_list):
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         mask = os.path.join(os.environ['avp'], 'nii', 'group_effects_wmvnt_incl',
-                            'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
+                            'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK')
         mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt3_msk_mema2 \
                           -mask %s/MNI152_T1_2mm_brain_mask_dil1.nii.gz \
                           -set %s %s -max_zeros 0.25 \
