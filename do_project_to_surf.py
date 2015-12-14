@@ -22,7 +22,7 @@ if __name__ == '__main__':
     pn = '1.0'
     for hemi in ['lh', 'rh']:
         for ef in effects:
-            parent_pref = os.path.join(outdir, 'clust_Aentr_flt2_msk_mema')
+            parent_pref = os.path.join(outdir, 'clust_%s_flt2_msk_mema' % ef)
             outname = '%s_%s_pn%s_MNI_N27.1D' % (parent_pref, hemi, pn)
             pr.vol2surf_mni(outdir, hemi, '%s+tlrc' % parent_pref,
                             pn, outname, logf)
