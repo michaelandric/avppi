@@ -253,6 +253,33 @@ def vol2surf_mni(work_dir, hemi, parent, pn, outname, logf=None):
     lg.info(p.stderr.decode("utf-8", "strict"))
     lg.info("Done with vol2surf_mni")
 
+def vol2surf_mni_no_pn(work_dir, hemi, parent, outname, logf=None):
+    """
+    Project to MNI surf.
+    Make sure 'suma_dir' is set right
+    """
+    if logf:
+        lg = setLog._log(logf)
+    lg.info("vol2surf_mni starting")
+    suma_dir = '/mnt/lnif-storage/urihas/software/AFNI2015/suma_MNI_N27'
+    spec_fname = 'MNI_N27_%s.spec' % hemi
+    spec = os.path.join(suma_dir, spec_fname)
+    surf_a = '%s.smoothwm.gii' % hemi
+    surf_b = '%s.pial.gii' % hemi
+    surfvol_name = 'MNI_N27_SurfVol.nii'
+    sv = os.path.join(suma_dir, surfvol_name)
+    cmdargs = split('3dVol2Surf -spec %s \
+                    -surf_A %s -surf_B %s \
+                    -sv %s -grid_parent %s \
+                    -map_func max -f_steps 10 -f_index voxels \
+                    -outcols_NSD_format -oob_index -1 -oob_value 0.0 \
+                    -out_1D %s' % (spec, surf_a, surf_b, sv,
+                                   parent, outname))
+    lg.info("Command: \n%s" % cmdargs)
+    p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
+    lg.info(p.stderr.decode("utf-8", "strict"))
+    lg.info("Done with vol2surf_mni")
+
 def cluster(vx_thr, clst_thr, infile, outpref, logf=None):
     """
     do 3dclust

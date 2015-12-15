@@ -19,10 +19,13 @@ if __name__ == '__main__':
 
     effects = ['Aentr', 'Ventr', 'Aentr_intxn']
 
-    pn = '1.0'
+    pn = '0.2'
     for hemi in ['lh', 'rh']:
         for ef in effects:
             parent_pref = os.path.join(outdir, 'clust_%s_flt2_msk_mema' % ef)
             outname = '%s_%s_pn%s_MNI_N27.1D' % (parent_pref, hemi, pn)
             pr.vol2surf_mni(outdir, hemi, '%s+tlrc' % parent_pref,
                             pn, outname, logf)
+            outname = '%s_%s_no_pn_MNI_N27.1D' % (parent_pref, hemi)
+            pr.vol2surf_mni_no_pn(outdir, hemi, '%s+tlrc' % parent_pref,
+                                  outname, logf)
