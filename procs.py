@@ -225,7 +225,7 @@ def mnispace_to_origspace(stdout, matfile, invmat,
     maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
 
-def vol2surf_mni(work_dir, hemi, parent, pn, outname, logf=None):
+def vol2surf_mni(work_dir, mapfunc, hemi, parent, pn, outname, logf=None):
     """
     Project to MNI surf.
     Make sure 'suma_dir' is set right
@@ -243,17 +243,17 @@ def vol2surf_mni(work_dir, hemi, parent, pn, outname, logf=None):
     cmdargs = split('3dVol2Surf -spec %s \
                     -surf_A %s -surf_B %s \
                     -sv %s -grid_parent %s \
-                    -map_func max -f_steps 10 -f_index voxels \
+                    -map_func %s -f_steps 10 -f_index voxels \
                     -f_p1_fr -%s -f_pn_fr %s \
                     -outcols_NSD_format -oob_index -1 -oob_value 0.0 \
                     -out_1D %s' % (spec, surf_a, surf_b, sv,
-                                   parent, pn, pn, outname))
+                                   parent, mapfunc, pn, pn, outname))
     lg.info("Command: \n%s" % cmdargs)
     p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
     lg.info(p.stderr.decode("utf-8", "strict"))
     lg.info("Done with vol2surf_mni")
 
-def vol2surf_mni_no_pn(work_dir, hemi, parent, outname, logf=None):
+def vol2surf_mni_no_pn(work_dir, mapfunc, hemi, parent, outname, logf=None):
     """
     Project to MNI surf.
     Make sure 'suma_dir' is set right
@@ -271,10 +271,10 @@ def vol2surf_mni_no_pn(work_dir, hemi, parent, outname, logf=None):
     cmdargs = split('3dVol2Surf -spec %s \
                     -surf_A %s -surf_B %s \
                     -sv %s -grid_parent %s \
-                    -map_func max -f_steps 10 -f_index voxels \
+                    -map_func %s -f_steps 10 -f_index voxels \
                     -outcols_NSD_format -oob_index -1 -oob_value 0.0 \
                     -out_1D %s' % (spec, surf_a, surf_b, sv,
-                                   parent, outname))
+                                   parent, mapfunc, outname))
     lg.info("Command: \n%s" % cmdargs)
     p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
     lg.info(p.stderr.decode("utf-8", "strict"))
