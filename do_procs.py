@@ -18,12 +18,12 @@ if __name__ == '__main__':
     sb = [4, 7, 10, 13]
     d = dict(zip(conds, sb))
     decon_dir = os.path.join(os.environ['avp'], 'nii',
-                             'deconvolve_outs_concat')
+                             'deconvolve_outs_concat_dec')
     mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
                         'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
     suff = 'Powered.cleanEPI_REML_fnirted_MNI2mm'
     for ss in subj_list:
-        ef_dir = os.path.join(os.environ['avp'], 'nii', 'ss%s_effects' % ss)
+        ef_dir = os.path.join(os.environ['avp'], 'nii', 'ss%s_effects_dec' % ss)
         for cn in conds:
             in_image = "'%s/decon_out.mion.%s_concat.%s.nii.gz[%d]'" % \
                 (decon_dir, ss, suff, d[cn])
