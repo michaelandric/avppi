@@ -8,7 +8,10 @@ library(gridExtra)
 source('/Users/andric/Documents/workspace/AVPPI/code/mult_gplot.R')
 
 subjects <- c()
-s_nums <- seq(1, 18)[seq(1,18) != 11]   # bcs ss 11 (and 19) no good 
+s_nums <- seq(1, 19)
+s_nums <- s_nums[s_nums != 3]
+s_nums <- s_nums[s_nums != 11]
+
 for (s in s_nums)
 {
     subjects <- c(subjects, paste('ss', s, sep=''))
@@ -26,7 +29,7 @@ for (ef in effects)
     {
         ss <- subjects[i]
         subj_mat[, i] <- read.table(paste
-                                    (ss,'_effects/',ef,'_',ss,'_coef+tlrc.txt',
+                                    (ss,'_effects_dec/',ef,'_',ss,'_coef+tlrc.txt',
                                      sep=''))$V1
     }
     ef_mat_name <- paste('subj_mat_', ef, sep='')
@@ -43,7 +46,7 @@ for (ef in effects)
 {
     main_ef <- ef
     cl <- read.table(paste
-                     ('group_effects/Clust_ttest_',ef,'_mask+tlrc.txt',
+                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_mask+tlrc.txt',
                       sep=''))$V1
     cl_var_name <- paste('clust_',ef,sep='')
     assign(cl_var_name, cl)

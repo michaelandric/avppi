@@ -10,7 +10,9 @@ library(gridExtra)
 # source('/Users/andric/Documents/workspace/AVPPI/code/mult_gplot.R')
 
 subjects <- c()
-s_nums <- seq(1, 18)[seq(1,18) != 11]   # bcs ss 11 (and 19) no good 
+s_nums <- seq(1, 19)
+s_nums <- s_nums[s_nums != 3]
+s_nums <- s_nums[s_nums != 11]
 for (s in s_nums)
 {
     subjects <- c(subjects, paste('ss', s, sep=''))
@@ -29,13 +31,12 @@ for (cn in conditions)
     {
         ss <- subjects[i]
         subj_mat[, i] <- read.table(paste
-                                    ('deconvolve_outs_concat/',
+                                    ('deconvolve_outs_concat_dec/',
                                      cn,'_coef_',s_nums[i],'_concat.',suffx, sep=''))$V1
     }
     ef_mat_name <- paste('subj_mat_', cn, sep='')
     assign(ef_mat_name, subj_mat)
 }
-
 
 total_unique_clusters <- 0
 
@@ -46,7 +47,7 @@ for (ef in effects)
 {
     main_ef <- ef
     cl <- read.table(paste
-                     ('group_effects/Clust_ttest_',ef,'_mask+tlrc.txt',
+                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_mask+tlrc.txt',
                       sep=''))$V1
     cl_var_name <- paste('clust_',ef,sep='')
     assign(cl_var_name, cl)
@@ -69,7 +70,7 @@ for (ef in effects)
                              (subj_mean_vec, condition_vec, subjects_vec))
         names(cluster_df) <- c('clustermean', 'condition', 'subj')
         plt_cnt = plt_cnt+1
-        bp <- ggplot(cluster_df, aes(condition, clustermean, fill=conditions)) +
+        bp <- ggplot(cluster_df, aes(condition, clustermean, fill=factor(condition))) +
             geom_boxplot(outlier.size=3) + ggtitle(paste(main_ef, 'cluster', i)) +
             xlab('Conditions') + ylab('Means') + theme_bw()
         print(bp)
