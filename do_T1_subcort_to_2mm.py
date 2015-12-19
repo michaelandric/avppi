@@ -18,5 +18,5 @@ if __name__ == '__main__':
     in_fn = os.path.join(anat_dir, 'T1_subcort_seg.nii.gz')
     out_fn = os.path.join(anat_dir,
                           '%s_T1_subcort_seg_fnirted_MNI2mm' % ss)
-    logfile = os.path.join(anat_dir, 'applywarpFNIR.log')
+    logfile = os.path.join(anat_dir, 'applywarpFNIRT_T1_subcort_seg')
     pr.applywarpFNIRT(ss, in_fn, out_fn, fn_coef, 'nn', logfile)
