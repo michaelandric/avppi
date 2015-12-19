@@ -52,27 +52,27 @@ def applywarpFLIRT(ss, work_dir, input, extrt1, out, premat, interp=None):
     f.close()
 
 
-def applywarpFNIRT(ss, work_dir, input, out, coeff, interp=None):
+def applywarpFNIRT(ss, input, out, coeff, interp=None, logf=None):
     """
     Warp via nonlinear transformation via fsl FNIRT
     """
-    print ('Doing applywarpFNIRT for %s -- ' % ss+time.ctime())
-    stdout_dir = os.path.join(work_dir, 'stdout_files')
-    if not os.path.exists(stdout_dir):
-        os.makedirs(stdout_dir)
-    f = open('%s/stdout_from_applywarp.txt' % stdout_dir, 'w')
+    if logf:
+        lg = setLog._log(logf)
+    lg.info('Doing applywarpFNIRT for %s -- ' % ss)
     if interp is None:
-        cmdargs = split('applywarp -i %s \
+        cmd = split('applywarp -i %s \
                         -r %s/data/standard/MNI152_T1_2mm.nii.gz \
                         -o %s -w %s' %
                         (input, os.environ['FSLDIR'], out, coeff))
     else:
-        cmdargs = split('applywarp -i %s \
+        cmd = split('applywarp -i %s \
                         -r %s/data/standard/MNI152_T1_2mm.nii.gz \
                         -o %s -w %s --interp=%s' %
                         (input, os.environ['FSLDIR'], out, coeff, interp))
-    call(cmdargs, stdout=f, stderr=STDOUT)
-    f.close()
+    lg.info("Command: \n%s" % cmd)
+    p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    lg.info(p.stdout.decode("utf-8", "strict"))
+    lg.info("Done with applywarpFNIRT")
 
 
 def converttoNIFTI(work_dir, brain, prefix=None):
