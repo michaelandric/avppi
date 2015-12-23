@@ -225,7 +225,8 @@ def mnispace_to_origspace(stdout, matfile, invmat,
     maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
 
-def vol2surf_mni(work_dir, mapfunc, hemi, parent, pn, outname, logf=None):
+def vol2surf_mni(work_dir, mapfunc, hemi, parent, pn,
+                 outname, logf=None, local=False):
     """
     Project to MNI surf.
     Make sure 'suma_dir' is set right
@@ -233,7 +234,10 @@ def vol2surf_mni(work_dir, mapfunc, hemi, parent, pn, outname, logf=None):
     if logf:
         lg = setLog._log(logf)
     lg.info("vol2surf_mni starting")
-    suma_dir = '/mnt/lnif-storage/urihas/software/AFNI2015/suma_MNI_N27'
+    if local is True:
+        suma_dir = '/Applications/AFNI/suma_MNI_N27'
+    else:
+        suma_dir = '/mnt/lnif-storage/urihas/software/AFNI2015/suma_MNI_N27'
     spec_fname = 'MNI_N27_%s.spec' % hemi
     spec = os.path.join(suma_dir, spec_fname)
     surf_a = '%s.smoothwm.gii' % hemi

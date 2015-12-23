@@ -8,6 +8,7 @@ Created on Tue Dec 22 16:58:24 2015
 import os
 import subprocess
 import setLog
+import procs as pr
 from shlex import split
 
 class mask_to_surface:
@@ -35,10 +36,16 @@ if __name__ == '__main__':
 
     workdir = os.path.join('/Users/andric/Documents/workspace',
                            'AVPPI', 'nii', 'group_effects_dec')
-    ns_masks = ['lateral_occipital_pFgA_z_FDR_0.01.nii.gz']
+    ns_masks = ['lateral_occipital_pFgA_z_FDR_0.01', 'mt_pFgA_z_FDR_0.01']
     logs = os.path.join(workdir, 'mask_to_surface')
 
     for f in ns_masks:
-        ms = mask_to_surface(os.path.join(workdir, f), logs)
+        ms = mask_to_surface(os.path.join(workdir, '%s.nii.gz' % f), logs)
         outmask = os.path.join(workdir, 'stepmask_%s' % f)
         ms.mask_neurosynth_file(outmask)
+
+        pn = 1.0
+        for hemi in ['lh', 'rh']:
+            outname = '%s_%s_pn%s_MNI_N27.1D' % (outmask, hemi, pn)
+            pr.vol2surf_mni(workdir, 'max_abs', hemi,
+                            '%s+tlrc' % outmask, pn, outname, logs, local=True)
