@@ -51,7 +51,7 @@ plots <- list()
 plt_cnt <- 0
 for (rg in rois_ids)
 {
-    region <- paste(labels$Label[which(labels$id==rois_ids[1])])
+    region <- paste(labels$Label[which(labels$id==rg)])
     condition_vec <- rep(conditions, each=length(subjects))
     subjects_vec <- rep(subjects, length(conditions))
     subj_mean_vec <- c()
@@ -75,9 +75,10 @@ for (rg in rois_ids)
 }
 
 pdf('subcort_regions_conditions_barplots_plots.pdf')
-for (n in seq(total_unique_clusters))
+for (n in seq(rois_ids))
 {
     print(plots[[n]])
 }
 dev.off()
 
+# summary(aov(clustermean ~ condition + Error(subj/condition), cluster_df))
