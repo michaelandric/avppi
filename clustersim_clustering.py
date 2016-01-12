@@ -47,7 +47,7 @@ def cluster(outdir, thr, clst_size, infile, outname):
     lg.info('Doing cluster ---- ')
     cmd = split(('3dclust -prefix %s -1Dformat -nosum -1dindex 1 -1tindex 1 \
                  -2thresh -%s %s \
-                 -dxyz=1 1.01 %s %s -savemask %s_mask') %
+                 -dxyz=2 1.01 %s %s -savemask %s_mask') %
                  (outname, thr, thr, clst_size, infile, outname))
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     lg.info(p.stdout.decode("utf-8", "strict"))
@@ -62,5 +62,5 @@ if __name__ == '__main__':
     effects = ['Aentr', 'Ventr', 'Aentr_intxn']
     for ef in effects:
         infile = os.path.join(outdir, '%s_flt2_msk_mema+tlrc.HEAD' % ef)
-        outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema' % ef)
-        cluster(outdir, 2.92, 210, infile, outname)
+        outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema_p.005' % ef)
+        cluster(outdir, 3.25, 146, infile, outname)
