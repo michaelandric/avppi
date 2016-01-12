@@ -14,13 +14,14 @@ if __name__ == '__main__':
 
     logf = os.path.join(outdir, 'project_to_surf')
 
-    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+#    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+    effects = ['Aentr', 'Aentr_intxn']   # no Ventr clusters survive
 
-    pn_list = ['0.2', '0.3', '1.0', '2.0']
+    pn_list = ['1.0', '2.0']
     mapping = 'max_abs'
 
     for ef in effects:
-        parent_pref = os.path.join(outdir, 'clust_%s_flt2_msk_mema' % ef)
+        parent_pref = os.path.join(outdir, 'clust_%s_flt2_msk_mema_p.005' % ef)
         for hemi in ['lh', 'rh']:
             outname = '%s_%s_no_pn_MNI_N27.1D' % (parent_pref, hemi)
             pr.vol2surf_mni_no_pn(outdir, mapping, hemi,
