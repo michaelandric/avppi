@@ -47,7 +47,7 @@ def cluster(outdir, thr, clst_size, infile, outname):
     lg.info('Doing cluster ---- ')
     cmd = split(('3dclust -prefix %s -1Dformat -nosum -1dindex 1 -1tindex 1 \
                  -2thresh -%s %s \
-                 -dxyz=2 1.01 %s %s -savemask %s_mask') %
+                 -dxyz=1 1.44 %s %s -savemask %s_mask') %
                  (outname, thr, thr, clst_size, infile, outname))
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     lg.info(p.stdout.decode("utf-8", "strict"))
