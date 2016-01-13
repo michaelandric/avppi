@@ -20,9 +20,8 @@ for (s in s_nums)
 
 nr <- 262245   # corresponding common space number of voxels
 
-modality <- factor(c('Auditory', 'Visual'))
 entropy_level <- factor(c('Low', 'High'))
-effects <- c('Aentr', 'Ventr', 'Aentr_intxn')
+effects <- c('Aentr', 'Aentr_intxn')
 conditions <- c('ALowVLow', 'ALowVHigh', 'AHighVLow', 'AHighVHigh')
 # read in the subj data for later use
 suffx <- paste('Powered.cleanEPI_REML_fnirted_MNI2mm.txt')
@@ -49,7 +48,7 @@ for (ef in effects)
 {
     main_ef <- ef
     cl <- read.table(paste
-                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_mask+tlrc.txt',
+                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_p.005_mask+tlrc.txt',
                       sep=''))$V1
     cl_var_name <- paste('clust_',ef,sep='')
     assign(cl_var_name, cl)
@@ -83,29 +82,9 @@ for (ef in effects)
     }
 }
 
-pdf('cluster_conditions_effect_plots2x2.pdf')
+pdf('cluster_conditions_effect_plots2x2_p.005.pdf')
 for (n in seq(total_unique_clusters))
 {
     print(plots[[n]])
 }
 dev.off()
-
-#pdf('cluster_effect_plots.pdf')
-i = 1
-plot = list() 
-for (n in seq(total_unique_clusters)) {
-    ### process data for plotting here ####
-    plot[[i]] = plots[[n]]
-    if (i %% 4 == 0) { ## print 9 plots on a page
-        print (do.call(grid.arrange,  plot))
-        plot = list() # reset plot 
-        i = 0 # reset index
-    }
-    i = i + 1
-}
-if (length(plot) != 0) {  ## capture remaining plots that have not been written out
-    print (do.call(grid.arrange,  plot))
-}
-#dev.off()
-
-# qplot(x=effect, y=clustermean, data=cluster_df, fill=effect, stat='identity', geom='bar')
