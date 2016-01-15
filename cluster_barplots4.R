@@ -5,6 +5,7 @@ setwd('/Users/andric/Documents/workspace/AVPPI/nii')
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
+library(reshape2)
 # below brings in 'multiplot' function
 # http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/
 # source('/Users/andric/Documents/workspace/AVPPI/code/mult_gplot.R')
@@ -21,7 +22,8 @@ for (s in s_nums)
 nr <- 262245   # corresponding common space number of voxels
 
 entropy_level <- factor(c('Low', 'High'))
-effects <- c('Aentr', 'Ventr', 'Aentr_intxn')
+# effects <- c('Aentr', 'Ventr', 'Aentr_intxn')
+effects <- c('Aentr', 'Aentr_intxn')
 conditions <- c('ALowVLow', 'ALowVHigh', 'AHighVLow', 'AHighVHigh')
 # read in the subj data for later use
 suffx <- paste('Powered.cleanEPI_REML_fnirted_MNI2mm.txt')
@@ -48,7 +50,7 @@ for (ef in effects)
 {
     main_ef <- ef
     cl <- read.table(paste
-                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_mask+tlrc.txt',
+                     ('group_effects_dec/clust_',ef,'_flt2_msk_mema_p.005_mask+tlrc.txt',
                       sep=''))$V1
     cl_var_name <- paste('clust_',ef,sep='')
     assign(cl_var_name, cl)
@@ -125,7 +127,7 @@ for (ef in effects)
     }
 }
 
-pdf('cluster_conditions_effect_plots2x2_bars_errbrs.pdf')
+pdf('cluster_conditions_effect_plots2x2_p.005_bars_errbrs.pdf')
 # pdf('cluster_conditions_effect_plots2x2_linepoint_errbrs.pdf')
 for (n in seq(total_unique_clusters))
 {
