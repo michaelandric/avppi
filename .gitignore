@@ -3,3 +3,5 @@ logs
 .3dLME.dbg.AFNI.args
 .Rproj.user
 code.Rproj
+3dDeconvolve.err
+__pycache__
