@@ -27,6 +27,9 @@ if __name__ == '__main__':
                           epi_nii_pref)
         in_fl = os.path.join(decon_dir, '%s.nii.gz' % epi_nii_pref)
         out_fl = os.path.join(decon_dir, '%s_flirted' % epi_nii_pref)
+
+        logfile = os.path.join(decon_dir, 'applywarp_%s' % ss)
+
         pr.applywarpFLIRT(ss, decon_dir, in_fl, extrt1,
                           out_fl, premat)
     
@@ -35,4 +38,4 @@ if __name__ == '__main__':
         in_fn = '%s.nii.gz' % out_fl
         out_fn = os.path.join(decon_dir,
                               '%s_fnirted_MNI2mm' % epi_nii_pref)
-        pr.applywarpFNIRT(ss, decon_dir, in_fn, out_fn, fn_coef)
+        pr.applywarpFNIRT(ss, in_fn, out_fn, fn_coef, logf=logfile)

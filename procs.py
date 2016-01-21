@@ -59,7 +59,7 @@ def applywarpFNIRT(ss, input, out, coeff, interp=None, logf=None):
     if logf:
         lg = setLog._log(logf)
     else:
-        lg = None
+        lg = '/tmp/michaeljames.andric/applywarpFNIRT'
     lg.info('Doing applywarpFNIRT for %s -- ' % ss)
     if interp is None:
         cmd = split('applywarp -i %s \
