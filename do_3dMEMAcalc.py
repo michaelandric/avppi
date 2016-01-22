@@ -78,7 +78,7 @@ def mema(stdoutdir, blk, ss_list):
         diff_set = []
         for s in ss_list:
             dat_dir = os.path.join(os.environ['avp'], 'nii',
-                                   'ss%s_effects_dec' % s)
+                                   'ss%s_effects_dec_blk' % s)
             coeff = os.path.join(dat_dir, '%s_ss%s_coef_%sblk+tlrc' % (ef, s, blk))
             tstatf = os.path.join(dat_dir, '%s_ss%s_tstat_%sblk+tlrc' % (ef, s, blk))
             diff_set.append('%d %s %s' %
