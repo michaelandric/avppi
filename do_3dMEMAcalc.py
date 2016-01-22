@@ -12,7 +12,7 @@ from shlex import split
 import subprocess
 
 
-def calc3d_4cond(stdoutdir, ss, input):
+def calc3d_4cond(stdoutdir, ss, blk, input):
     """
     Get difference measures
     ------------
@@ -36,25 +36,25 @@ def calc3d_4cond(stdoutdir, ss, input):
         print('doing Subj %s -- %s... \n' % (ss, tt))
         f = open('%s/stdout_from_3dcalc.txt' % stdoutdir, 'w')
         A_ef_args = "3dcalc -a '%s[%d]' -b '%s[%d]' -c '%s[%d]' -d '%s[%d]' \
-                    -expr '(a+b)-(c+d)' -prefix %s/Aentr_ss%s_%s" % \
+                    -expr '(a+b)-(c+d)' -prefix %s/Aentr_ss%s_%s_%sblk" % \
                     (input, d['AHighVHigh'], input, d['AHighVLow'],
                      input, d['ALowVHigh'], input, d['ALowVLow'],
-                     stdoutdir, ss, tt)
+                     stdoutdir, ss, tt, blk)
         V_ef_args = "3dcalc -a '%s[%d]' -b '%s[%d]' -c '%s[%d]' -d '%s[%d]' \
-                    -expr '(a+b)-(c+d)' -prefix %s/Ventr_ss%s_%s" % \
+                    -expr '(a+b)-(c+d)' -prefix %s/Ventr_ss%s_%s_%sblk" % \
                     (input, d['AHighVHigh'], input, d['ALowVHigh'],
                      input, d['AHighVLow'], input, d['ALowVLow'],
-                     stdoutdir, ss, tt)
+                     stdoutdir, ss, tt, blk)
         A_intxn_args = "3dcalc -a '%s[%d]' -b '%s[%d]' -c '%s[%d]' -d '%s[%d]' \
-                       -expr '(a-b)-(c-d)' -prefix %s/Aentr_intxn_ss%s_%s" % \
+                       -expr '(a-b)-(c-d)' -prefix %s/Aentr_intxn_ss%s_%s_%sblk" % \
                        (input, d['AHighVHigh'], input, d['ALowVHigh'],
                         input, d['AHighVLow'], input, d['ALowVLow'],
-                        stdoutdir, ss, tt)
+                        stdoutdir, ss, tt, blk)
         V_intxn_args = "3dcalc -a '%s[%d]' -b '%s[%d]' -c '%s[%d]' -d '%s[%d]' \
-                       -expr '(a-b)-(c-d)' -prefix %s/Ventr_intxn_ss%s_%s" % \
+                       -expr '(a-b)-(c-d)' -prefix %s/Ventr_intxn_ss%s_%s_%sblk" % \
                        (input, d['AHighVHigh'], input, d['AHighVLow'],
                         input, d['ALowVHigh'], input, d['ALowVLow'],
-                        stdoutdir, ss, tt)
+                        stdoutdir, ss, tt, blk)
 
         call(['echo', 'Doing A main effects ...'], stdout=f, stderr=STDOUT)
         call(A_ef_args, stdout=f, stderr=STDOUT, shell=True)
@@ -67,28 +67,28 @@ def calc3d_4cond(stdoutdir, ss, input):
         f.close()
 
 
-def mema(stdoutdir, ss_list):
+def mema(stdoutdir, blk, ss_list):
     """
     AFNI's 3dMema
     """
     lg = setLog._log('%s/mema' % stdoutdir)
     lg.info('Doing mema ------------ ')
-    effects = ['Aentr', 'Ventr', 'Aentr_intxn', 'Ventr_intxn']
+    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
     for ef in effects:
         diff_set = []
         for s in ss_list:
             dat_dir = os.path.join(os.environ['avp'], 'nii',
                                    'ss%s_effects_dec' % s)
-            coeff = os.path.join(dat_dir, '%s_ss%s_coef+tlrc' % (ef, s))
-            tstatf = os.path.join(dat_dir, '%s_ss%s_tstat+tlrc' % (ef, s))
+            coeff = os.path.join(dat_dir, '%s_ss%s_coef_%sblk+tlrc' % (ef, s, blk))
+            tstatf = os.path.join(dat_dir, '%s_ss%s_tstat_%sblk+tlrc' % (ef, s, blk))
             diff_set.append('%d %s %s' %
                             (s, coeff, tstatf))
         diff_set = ' '.join(diff_set)
         mask = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec',
                             'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
-        mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt2_msk_mema \
+        mema_args = split('3dMEMA -jobs 20 -prefix %s/%s_flt2_%sblk_msk_mema \
                           -mask %s -set %s %s -missing_data 0 -residual_Z' %
-                          (stdoutdir, ef, mask, ef, diff_set))
+                          (stdoutdir, ef, blk, mask, ef, diff_set))
         lg.info('args for 3dMEMA: \n%s' % mema_args)
         lg.info('Running 3dMEMA ...')
         p = subprocess.run(mema_args, stderr=subprocess.PIPE)
@@ -145,7 +145,7 @@ if __name__ == '__main__':
                                   'ss%s_effects_dec_blk' % ss)
             if not os.path.exists(fx_dir):
                 os.makedirs(fx_dir)
-            calc3d_4cond(fx_dir, ss, infile)
+            calc3d_4cond(fx_dir, ss, bl, infile)
     
         groupdir = os.path.join(os.environ['avp'], 'nii',
                                 'group_effects_%sblk' % bl)
