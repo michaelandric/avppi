@@ -149,5 +149,5 @@ if __name__ == '__main__':
     
         groupdir = os.path.join(os.environ['avp'], 'nii',
                                 'group_effects_%sblk' % bl)
-        mema(groupdir, subj_list)
+        mema(groupdir, bl, subj_list)
 #        mema2(groupdir, subj_list)
