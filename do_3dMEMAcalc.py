@@ -133,18 +133,21 @@ if __name__ == '__main__':
     subj_list.remove(3)
     subj_list.remove(11)
 
-    decondir = os.path.join(os.environ['avp'], 'nii',
-                            'deconvolve_outs_concat_dec')
-#    conds = ['ALowVLow', 'ALowVHigh', 'AHighVLow', 'AHighVHigh']
-    f_suffx = 'Powered.cleanEPI_REML_fnirted_MNI2mm.nii.gz'
-    for ss in subj_list:
-        inpref = 'decon_out.mion.%s_concat' % ss
-        infile = os.path.join(decondir, '%s.%s' % (inpref, f_suffx))
-        fx_dir = os.path.join(os.environ['avp'], 'nii', 'ss%s_effects_dec' % ss)
-        if not os.path.exists(fx_dir):
-            os.makedirs(fx_dir)
-#        calc3d_4cond(fx_dir, ss, infile)
-
-    groupdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
-    mema(groupdir, subj_list)
-#    mema2(groupdir, subj_list)
+    for bl in [10, 15, 20]:
+        decondir = os.path.join(os.environ['avp'], 'nii',
+                                'deconvolve_outs_concat_%sblk' % bl)
+    
+        f_suffx = 'Powered.cleanEPI_%sblk_REML_fnirted_MNI2mm.nii.gz' % bl
+        for ss in subj_list:
+            inpref = 'decon_out.mion.%s_concat' % ss
+            infile = os.path.join(decondir, '%s.%s' % (inpref, f_suffx))
+            fx_dir = os.path.join(os.environ['avp'], 'nii',
+                                  'ss%s_effects_dec_blk' % ss)
+            if not os.path.exists(fx_dir):
+                os.makedirs(fx_dir)
+            calc3d_4cond(fx_dir, ss, infile)
+    
+        groupdir = os.path.join(os.environ['avp'], 'nii',
+                                'group_effects_%sblk' % bl)
+        mema(groupdir, subj_list)
+#        mema2(groupdir, subj_list)
