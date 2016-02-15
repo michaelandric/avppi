@@ -57,7 +57,7 @@ for ss in subj_list:
     for block in [20, 15, 10]:
         outcensor = make_censor(infile, round(block/1.5))
         outf = os.path.join('/mnt/lnif-storage/urihas/AVaudvisppi/timing',
-                            'all_ts.block%s.%s.Powered.censor.1D', (block, ss))
+                            'all_ts.block%s.%s.Powered.censor.1D' % (block, ss))
         out = open(outf, 'w')
-        out.write(outcensor)
+        out.write('\n'.join(map(str, outcensor)))
         out.close()
