@@ -53,7 +53,7 @@ subj_list.remove(3)
 subj_list.remove(11)
 for ss in subj_list:
     infile = os.path.join(os.environ['avp'], 'nii',
-                          'all_ts.%s.Powered.censor.1D', ss)
+                          'all_ts.%s.Powered.censor.1D' % ss)
     for block in [20, 15, 10]:
         outcensor = make_censor(infile, round(block/1.5))
         outf = os.path.join('/mnt/lnif-storage/urihas/AVaudvisppi/timing',
