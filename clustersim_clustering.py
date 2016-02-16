@@ -27,7 +27,7 @@ def estimate_clustersizes(fwhmx, outdir):
     lg.info('Doing estimate_clustersizes ---- ')
     lg.info('FWHMx is: %s' % fwhmx)
     mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
-                        'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
+                        'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
     cmd = split('3dClustSim -mask %s -fwhmxyz %f %f %f' % (mask, fwhmx[0], fwhmx[1], fwhmx[2]))
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     lg.info(p.stdout.decode("utf-8", "strict"))
