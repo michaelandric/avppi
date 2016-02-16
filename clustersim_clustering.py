@@ -26,10 +26,8 @@ def estimate_clustersizes(fwhmx, outdir):
     lg = setLog._log('%s/clustersize_estimates' % outdir)
     lg.info('Doing estimate_clustersizes ---- ')
     lg.info('FWHMx is: %s' % fwhmx)
-#    mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
-#                        'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
-    mask = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec',
-                        'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK')    
+    mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
+                        'MNI152_T1_2mm_brain_mask_dil1+tlrc.BRIK.gz')
     cmd = split('3dClustSim -mask %s -fwhmxyz %f %f %f' % (mask, fwhmx[0], fwhmx[1], fwhmx[2]))
     p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     lg.info(p.stdout.decode("utf-8", "strict"))
@@ -55,12 +53,18 @@ def cluster(outdir, thr, clst_size, infile, outname):
 
 
 if __name__ == '__main__':
-    fwhmx = np.array((8.054140, 8.238027, 8.247797))
-    outdir = os.path.join(os.environ['avp'], 'nii', 'group_effects_dec')
-#    estimate_clustersizes(fwhmx, outdir)
-
-    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
-    for ef in effects:
-        infile = os.path.join(outdir, '%s_flt2_msk_mema+tlrc.HEAD' % ef)
-        outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema_p.005' % ef)
-        cluster(outdir, 3.25, 146, infile, outname)
+#    fwhmx = np.array((8.054140, 8.238027, 8.247797))
+    fwhm_d = {20: [8.84498176, 8.98884216, 9.00245],
+              15: [8.91003216, 9.06582647, 9.03423882],
+ 10: [8.8977802, 9.07431745, 9.00935118]}
+    for block in fwhm_d:
+        fwhmx = np.array(fwhm_d[block])
+        outdir = os.path.join(os.environ['avp'], 'nii',
+                              'group_effects_%sblk' % block)
+        estimate_clustersizes(fwhmx, outdir)
+    
+        effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+        for ef in effects:
+            infile = os.path.join(outdir, '%s_flt2_msk_mema+tlrc.HEAD' % ef)
+            outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema_p.005' % ef)
+#            cluster(outdir, 3.25, 146, infile, outname)
