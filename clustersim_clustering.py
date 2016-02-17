@@ -61,10 +61,10 @@ if __name__ == '__main__':
         fwhmx = np.array(fwhm_d[block])
         outdir = os.path.join(os.environ['avp'], 'nii',
                               'group_effects_%sblk' % block)
-        estimate_clustersizes(fwhmx, outdir)
+#        estimate_clustersizes(fwhmx, outdir)
     
         effects = ['Aentr', 'Ventr', 'Aentr_intxn']
         for ef in effects:
-            infile = os.path.join(outdir, '%s_flt2_msk_mema+tlrc.HEAD' % ef)
-            outname = os.path.join(outdir, 'clust_%s_flt2_msk_mema_p.005' % ef)
-#            cluster(outdir, 3.25, 146, infile, outname)
+            infile = os.path.join(outdir, '%s_flt2_%sblk_msk_mema+tlrc.HEAD' % (block, ef))
+            outname = os.path.join(outdir, 'clust_%s_flt2_%sblk_msk_mema' % (block, ef))
+            cluster(outdir, 2.92, 212, infile, outname)
