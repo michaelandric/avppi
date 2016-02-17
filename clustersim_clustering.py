@@ -65,6 +65,6 @@ if __name__ == '__main__':
     
         effects = ['Aentr', 'Ventr', 'Aentr_intxn']
         for ef in effects:
-            infile = os.path.join(outdir, '%s_flt2_%sblk_msk_mema+tlrc.HEAD' % (block, ef))
-            outname = os.path.join(outdir, 'clust_%s_flt2_%sblk_msk_mema' % (block, ef))
+            infile = os.path.join(outdir, '%s_flt2_%sblk_msk_mema+tlrc.HEAD' % (ef, block))
+            outname = os.path.join(outdir, 'clust_%s_flt2_%sblk_msk_mema' % (ef, block))
             cluster(outdir, 2.92, 212, infile, outname)
