@@ -16,7 +16,7 @@ pdf('peak_vox_from_clust_scatter_plots.pdf')
 for (i in 1:dim(combo_names)[2])
 {
     plt_cnt = plt_cnt+1
-    plt <- ggplot(peak_dat, aes_string(x=combo_names[1,i], y=combo_names[2,i])) + geom_point(size=3) + geom_smooth(method=lm) + theme_bw()
+    plt <- ggplot(peak_dat, aes_string(x=combo_names[1,i], y=combo_names[2,i])) + geom_point(size=3) + geom_smooth(method=lm, se=FALSE, size=1.15) + theme_bw()
     plots[[plt_cnt]] <- plt  # add each plot into plot list
     print(plt)
 }
