@@ -21,7 +21,7 @@ def mema(log, level, subjectlist, outname_mema):
     diff_set_list = []
     for subject in subjectlist:
         dat_dir = os.path.join(os.environ['avp'], 'nii',
-                               'ss{}_effects_dec_blk'.format(subject))
+                               'ss{}_effects_dec'.format(subject))
         coeff = os.path.join(dat_dir, '{}_grad_ss{}_coef+tlrc'.format(
             level, subject))
         tstatf = os.path.join(dat_dir, '{}_grad_ss{}_tstat+tlrc'.format(
