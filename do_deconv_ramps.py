@@ -38,7 +38,7 @@ def deconv(log, stdoutdir, inputset, deconv_fnames):
     deconargs = split("3dDeconvolve -jobs 2 -input %s \
                       -force_TR 1.5 -polort A \
                       -censor %s \
-                      -nodmbase -num_stimts 8 \
+                      -nodmbase -num_stimts 12 \
                       -stim_times 1 %s 'GAM' \
                       -stim_label 1 fixate \
                       -stim_times 2 %s 'WAV(0,2,0,12,0,0)' \
@@ -123,7 +123,7 @@ def main():
     decon_outdir = os.path.join(os.environ['avp'],
                                 'nii', 'deconvolve_outs_ramps')
     logfile = setup_log(os.path.join(os.environ['avp'], 'logs',
-                                     'do_deconvMION_ramps_%s' % sys.argv[1]))
+                                     'do_deconv_ramps_%s' % sys.argv[1]))
 
     deconv(logfile, decon_outdir, set_inputs(sys.argv[1]),
            set_fnames(sys.argv[1], decon_outdir))
