@@ -22,8 +22,10 @@ def mema(log, subj_list, cond, outpref, mask=None):
     cfbrk, tbrk = dictionary_set(cond)
 
     d_set = []
+
+    fname_sufx = 'Powered.cleanEPI_REML_fnirted_MNI2mm.nii.gz'
     for subj in subj_list:
-        fname = 'decon_out.ramps_wav.%s_concat.Powered.cleanEPI_REML+orig' % subj
+        fname = 'decon_out.ramps_wav.%s_concat.%s' % (subj, fname_sufx)
         d_set.append("%d %s %s" % (subj,
                                    os.path.join(dat_dir, "%s\[%d]" %
                                                 (fname, cfbrk)),
@@ -32,10 +34,8 @@ def mema(log, subj_list, cond, outpref, mask=None):
     mema_args = split("3dMEMA -jobs 10 -prefix %s \
                       -mask %s -set %s %s -missing_data 0 -residual_Z" %
                       (outpref, mask, cond, ' '.join(d_set)))
-    mema_args.quotes = '"'
-    mema_args.whitespace_split = True
     log.info('args for 3dMEMA: \n%s', mema_args)
-    proc = Popen(list(mema_args), stdout=PIPE, stderr=STDOUT)
+    proc = Popen(mema_args, stdout=PIPE, stderr=STDOUT)
     log.info(proc.stdout.read())
     log.info('3dMEMA done.')
 
