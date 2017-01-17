@@ -9,7 +9,7 @@ import os
 from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
-from shlex import split
+from shlex import shlex
 from setlog import setup_log
 
 
@@ -24,16 +24,18 @@ def mema(log, subj_list, cond, outpref, mask=None):
     d_set = []
     for subj in subj_list:
         fname = 'decon_out.ramps_wav.%s_concat.Powered.cleanEPI' % subj
-        d_set.append('%d %s %s' % (subj,
+        d_set.append("%d %s %s" % (subj,
                                    os.path.join(dat_dir, "%s'[%d]'" %
                                                 (fname, cfbrk)),
                                    os.path.join(dat_dir, "%s'[%d]'" %
                                                 (fname, tbrk))))
-    mema_args = split('3dMEMA -jobs 10 -prefix %s \
-                      -mask %s -set %s %s -missing_data 0 -residual_Z' %
+    mema_args = shlex("3dMEMA -jobs 10 -prefix %s \
+                      -mask %s -set %s %s -missing_data 0 -residual_Z" %
                       (outpref, mask, cond, ' '.join(d_set)))
+    mema_args.quotes = '"'
+    mema_args.whitespace_split = True
     log.info('args for 3dMEMA: \n%s', mema_args)
-    proc = Popen(mema_args, stdout=PIPE, stderr=STDOUT)
+    proc = Popen(list(mema_args), stdout=PIPE, stderr=STDOUT)
     log.info(proc.stdout.read())
     log.info('3dMEMA done.')
 
@@ -58,7 +60,7 @@ def main():
     subj_list.remove(11)
 
     logfile = setup_log(os.path.join(os.environ['avp'], 'logs',
-                                     'MEMA_rampss'))
+                                     'MEMA_ramps'))
     conditions = ['ALowVLow_rampdown', 'ALowVLow_rampup',
                   'ALowVHigh_rampdown', 'ALowVHigh_rampup',
                   'AHighVLow_rampdown', 'AHighVLow_rampup',
@@ -72,3 +74,7 @@ def main():
         mema(logfile, subj_list, cc,
              os.path.join(outdir, '%s_mema_out' % cc),
              mask)
+
+
+if __name__ == '__main__':
+    main()
