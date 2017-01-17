@@ -10,7 +10,10 @@ import time
 import logging
 import setLog
 from shlex import split
-from subprocess import call, STDOUT
+from subprocess import call
+from subprocess import Popen
+from subprocess import PIPE
+from subprocess import STDOUT
 import subprocess
 
 
@@ -52,35 +55,28 @@ def applywarpFLIRT(ss, work_dir, input, extrt1, out, premat, interp=None):
     f.close()
 
 
-def applywarpFNIRT(ss, input, out, coeff, interp=None, logf=None):
-    """
-    Warp via nonlinear transformation via fsl FNIRT
-    """
-    if logf:
-        lg = setLog._log(logf)
-    else:
-        lg = '/tmp/michaeljames.andric/applywarpFNIRT'
-    lg.info('Doing applywarpFNIRT for %s -- ' % ss)
+def applywarpFNIRT(ss, input, out, coeff, interp=None, log=None):
+    """Warp via nonlinear transformation via fsl FNIRT."""
+    if log:
+        log.info('Doing applywarpFNIRT for %s -- ', ss)
+
     if interp is None:
         cmd = split('applywarp -i %s \
-                        -r %s/data/standard/MNI152_T1_2mm.nii.gz \
-                        -o %s -w %s' %
-                        (input, os.environ['FSLDIR'], out, coeff))
+                    -r %s/data/standard/MNI152_T1_2mm.nii.gz \
+                    -o %s -w %s' % (input, os.environ['FSLDIR'], out, coeff))
     else:
         cmd = split('applywarp -i %s \
-                        -r %s/data/standard/MNI152_T1_2mm.nii.gz \
-                        -o %s -w %s --interp=%s' %
-                        (input, os.environ['FSLDIR'], out, coeff, interp))
-    lg.info("Command: \n%s" % cmd)
-    p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    lg.info(p.stdout.decode("utf-8", "strict"))
-    lg.info("Done with applywarpFNIRT")
+                    -r %s/data/standard/MNI152_T1_2mm.nii.gz \
+                    -o %s -w %s --interp=%s' %
+                    (input, os.environ['FSLDIR'], out, coeff, interp))
+    log.info("Command: \n%s", cmd)
+    proc = Popen(cmd, stdout=PIPE, stderr=STDOUT)
+    log.info(proc.stdout.read())
+    log.info("Done with applywarpFNIRT")
 
 
 def converttoNIFTI(work_dir, brain, prefix=None):
-    """
-    convert AFNI file to NIFTI
-    """
+    """Convert AFNI file to NIFTI."""
     print ('Doing converttoNIFTI for %s -- ' % brain+time.ctime())
     stdout_dir = os.path.join(work_dir, 'stdout_files')
     if not os.path.exists(stdout_dir):

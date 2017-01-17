@@ -9,7 +9,7 @@ import os
 from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
-from shlex import shlex
+from shlex import split
 from setlog import setup_log
 
 
@@ -23,13 +23,13 @@ def mema(log, subj_list, cond, outpref, mask=None):
 
     d_set = []
     for subj in subj_list:
-        fname = 'decon_out.ramps_wav.%s_concat.Powered.cleanEPI' % subj
+        fname = 'decon_out.ramps_wav.%s_concat.Powered.cleanEPI_REML+orig' % subj
         d_set.append("%d %s %s" % (subj,
-                                   os.path.join(dat_dir, "%s'[%d]'" %
+                                   os.path.join(dat_dir, "%s\[%d]" %
                                                 (fname, cfbrk)),
-                                   os.path.join(dat_dir, "%s'[%d]'" %
+                                   os.path.join(dat_dir, "%s\[%d]" %
                                                 (fname, tbrk))))
-    mema_args = shlex("3dMEMA -jobs 10 -prefix %s \
+    mema_args = split("3dMEMA -jobs 10 -prefix %s \
                       -mask %s -set %s %s -missing_data 0 -residual_Z" %
                       (outpref, mask, cond, ' '.join(d_set)))
     mema_args.quotes = '"'
