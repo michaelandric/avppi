@@ -66,7 +66,7 @@ def deconv(log, stdoutdir, inputset, deconv_fnames):
                       -gltsym 'SYM: +ALowVLow_rampdown +ALowVHigh_rampdown \
                       +AHighVLow_rampdown +AHighVHigh_rampdown \
                       -ALowVLow_rampup -ALowVHigh_rampup -AHighVLow_rampup \
-                      -AHighVHigh_rampup' -glt_label 1 rampup_vs_rampdown \
+                      -AHighVHigh_rampup' -glt_label 1 rampdown_vs_rampup \
                       -fout -tout -errts %s_errts -bucket %s -x1D %s.xmat.1D" %
                       (inputset, deconv_fnames['cf'], sf_list[0],
                        sf_list[1], sf_list[1], sf_list[2], sf_list[2],
@@ -103,7 +103,7 @@ def set_inputs(subj):
 def set_fnames(subj, decondir):
     """Create dictionary with names."""
     fnames = dict()
-    outpref = 'decon_out.mion.%s_concat.Powered.cleanEPI' % subj
+    outpref = 'decon_out.ramps_wav.%s_concat.Powered.cleanEPI' % subj
     sfx = 'Powered.cleanEPI.uncensored.txt'
     wm_name = 'wm_v8.%s_all.%s' % (subj, sfx)
     fnames['wm_file'] = os.path.join(os.environ['avp'], 'nii',
