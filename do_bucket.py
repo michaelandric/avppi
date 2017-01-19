@@ -6,10 +6,9 @@ Created on Sat Oct  3 19:54:37 2015
 """
 
 import os
-from subprocess import Popen
 from subprocess import PIPE
 from subprocess import STDOUT
-from shlex import shlex
+from subprocess import call
 from setlog import setup_log
 
 
@@ -17,12 +16,9 @@ def bucket(log, outpref, infile):
     """Bucket data from sub brik."""
     log.info("Do 3dbucket %s \n", outpref)
 
-    bucketargs = shlex("3dbucket -prefix %s %s" % (outpref, infile))
-    bucketargs.whitespace_split = True
-    bucket_args = list(bucketargs)
-    log.info("Bucket args: \n%s", bucket_args)
-    proc = Popen(bucket_args, stdout=PIPE, stderr=STDOUT)
-    log.info(proc.stdout.read())
+    bucketargs = "3dbucket -prefix %s %s" % (outpref, infile)
+    log.info("Bucket args: \n%s", bucketargs)
+    call(bucketargs, stdout=PIPE, stderr=STDOUT)
 
 
 def dictionary_set():
@@ -57,7 +53,8 @@ def main():
             for i, subbrk in enumerate(['coef', 'tstat']):
                 in_file = os.path.join(dat_dir, "%s'[%d]'" %
                                        (fname, condition_dict[condition][i]))
-                out_pref = '%s_%s_%s' % (condition, subbrk, subj)
+                out_pref = os.path.join(dat_dir,
+                                        '%s_%s_%s' % (condition, subbrk, subj))
                 bucket(logfile, out_pref, in_file)
 
 

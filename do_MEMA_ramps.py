@@ -19,18 +19,13 @@ def mema(log, subj_list, cond, outpref, mask=None):
     dat_dir = os.path.join(os.environ['avp'], 'nii',
                            'deconvolve_outs_ramps')
 
-    cfbrk, tbrk = dictionary_set(cond)
-
     d_set = []
-
-    fname_sufx = 'Powered.cleanEPI_REML_fnirted_MNI2mm.nii.gz'
     for subj in subj_list:
-        fname = 'decon_out.ramps_wav.%s_concat.%s' % (subj, fname_sufx)
         d_set.append("%d %s %s" % (subj,
-                                   os.path.join(dat_dir, "%s\[%d]" %
-                                                (fname, cfbrk)),
-                                   os.path.join(dat_dir, "%s\[%d]" %
-                                                (fname, tbrk))))
+                                   os.path.join(dat_dir, "%s_coef_%d+tlrc" %
+                                                (cond, subj)),
+                                   os.path.join(dat_dir, "%s_tstat_%d+tlrc" %
+                                                (cond, subj))))
     mema_args = split("3dMEMA -jobs 10 -prefix %s \
                       -mask %s -set %s %s -missing_data 0 -residual_Z" %
                       (outpref, mask, cond, ' '.join(d_set)))
@@ -38,19 +33,6 @@ def mema(log, subj_list, cond, outpref, mask=None):
     proc = Popen(mema_args, stdout=PIPE, stderr=STDOUT)
     log.info(proc.stdout.read())
     log.info('3dMEMA done.')
-
-
-def dictionary_set(condition):
-    """Build dictionary with condition names and sub brik."""
-    conditions = ['ALowVLow_rampdown', 'ALowVLow_rampup',
-                  'ALowVHigh_rampdown', 'ALowVHigh_rampup',
-                  'AHighVLow_rampdown', 'AHighVLow_rampup',
-                  'AHighVHigh_rampdown', 'AHighVHigh_rampup']
-
-    coef = range(4, 26, 3)
-    tstat = range(5, 27, 3)
-    cond_dict = dict(zip(conditions, zip(coef, tstat)))
-    return cond_dict[condition]
 
 
 def main():
