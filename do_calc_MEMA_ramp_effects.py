@@ -14,8 +14,7 @@ from setlog import setup_log
 
 
 def calc_conds(log, subj, rmp, tt):
-    """
-    Calculate difference maps and interaction.
+    """Calculate difference maps and interaction.
 
     arg: rmp
         This is for the ramp type: 'rampup' or 'rampdown'
@@ -26,10 +25,10 @@ def calc_conds(log, subj, rmp, tt):
     os.chdir(os.path.join(os.environ['avp'], 'nii', 'deconvolve_outs_ramps'))
     A_ef = split("3dcalc -a %s -b %s -c %s -d %s \
                  -expr '(a+b)-(c+d)' -prefix %s" %
-                 ('AHighVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'AHighVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'ALowVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'ALowVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
+                 ('AHighVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'AHighVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'ALowVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'ALowVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
                   os.path.join(os.environ['avp'], 'nii', 'ramp_effects',
                                'A_%s_%s_%d' % (rmp, tt, subj))))
     log.info("Args: \n%s", A_ef)
@@ -38,10 +37,10 @@ def calc_conds(log, subj, rmp, tt):
 
     V_ef = split("3dcalc -a %s -b %s -c %s -d %s \
                  -expr '(a+b)-(c+d)' -prefix %s" %
-                 ('AHighVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'ALowVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'AHighVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                  'ALowVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
+                 ('AHighVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'ALowVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'AHighVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                  'ALowVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
                   os.path.join(os.environ['avp'], 'nii', 'ramp_effects',
                                'V_%s_%s_%d' % (rmp, tt, subj))))
     log.info("Args: \n%s", V_ef)
@@ -50,10 +49,10 @@ def calc_conds(log, subj, rmp, tt):
 
     Intxn_ef = split("3dcalc -a %s -b %s -c %s -d %s \
                      -expr '(a-b)-(c-d)' -prefix %s" %
-                     ('AHighVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                      'ALowVHigh_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                      'AHighVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
-                      'ALowVLow_%s_%s_%d+tlrc' % (subj, tt, rmp),
+                     ('AHighVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                      'ALowVHigh_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                      'AHighVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
+                      'ALowVLow_%s_%s_%d+tlrc' % (rmp, tt, subj),
                       os.path.join(os.environ['avp'], 'nii',
                                    'ramp_effects',
                                    'Intxn_%s_%s_%d' % (rmp, tt, subj))))
