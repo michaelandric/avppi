@@ -7,8 +7,6 @@ Created on Fri Sep 18 16:03:24 2015
 
 import os
 import time
-import logging
-import setLog
 from shlex import split
 from subprocess import call
 from subprocess import Popen
@@ -21,7 +19,7 @@ def applywarp(workdir, input, extrt1, out, premat, interp=None):
     """
     general procedure for applywarp
     """
-    print ('Doing applywarp')
+    print('Doing applywarp')
     stdoutdir = os.path.join(workdir, 'stdout_files')
     if not os.path.exists(stdoutdir):
         os.makedirs(stdoutdir)
@@ -129,6 +127,7 @@ def clustsim(fwhm, outdir, mask=None):
     call(cmdargs, stdout=f, stderr=STDOUT)
     f.close()
 
+
 def clustsim_acf(acf, outdir, mask=None):
     """
     Find the size of clusters by chance
@@ -147,6 +146,7 @@ def clustsim_acf(acf, outdir, mask=None):
                         (mask, acf[0], acf[1], acf[2]))
     call(cmdargs, stdout=f, stderr=STDOUT)
     f.close()
+
 
 def mean_epi(ss, infile, work_dir, outpref):
     """
@@ -182,6 +182,7 @@ def maskdump(work_dir, mask, in_pref, out_pref, noijk=True):
     outf.close()
     f.close()
 
+
 def convert_inversemat(matfile, outfile, stdf=None):
     if stdf is not None:
         stdout_dir = 'stdout_files'
@@ -194,6 +195,7 @@ def convert_inversemat(matfile, outfile, stdf=None):
         f.close()
     else:
         call(cmdargs)
+
 
 def mnispace_to_origspace(stdout, matfile, invmat,
                           rev_fnirt, flirtd_brain,
@@ -223,37 +225,38 @@ def mnispace_to_origspace(stdout, matfile, invmat,
     maskdump(stdout, msk_frac_bin_orig, region_msk_out_orig, final_msk_outpref)
     f.close()
 
+
 def vol2surf_mni(work_dir, mapfunc, hemi, parent, pn,
-                 outname, logf=None, local=False):
+                 outname, log=None, local=False):
+    """Project to MNI surf.
+    Make sure 'suma_dir' is set right.
     """
-    Project to MNI surf.
-    Make sure 'suma_dir' is set right
-    """
-    if logf:
-        lg = setLog._log(logf)
-    lg.info("vol2surf_mni starting")
+    if log:
+        log.info('vol2surf_mni starting... \n')
     if local is True:
         suma_dir = '/Applications/AFNI/suma_MNI_N27'
     else:
         suma_dir = '/mnt/lnif-storage/urihas/software/AFNI2015/suma_MNI_N27'
-    spec_fname = 'MNI_N27_%s.spec' % hemi
-    spec = os.path.join(suma_dir, spec_fname)
-    surf_a = '%s.smoothwm.gii' % hemi
-    surf_b = '%s.pial.gii' % hemi
-    surfvol_name = 'MNI_N27_SurfVol.nii'
-    sv = os.path.join(suma_dir, surfvol_name)
     cmdargs = split('3dVol2Surf -spec %s \
                     -surf_A %s -surf_B %s \
                     -sv %s -grid_parent %s \
                     -map_func %s -f_steps 10 -f_index voxels \
                     -f_p1_fr -%s -f_pn_fr %s \
                     -outcols_NSD_format -oob_index -1 -oob_value 0.0 \
-                    -out_1D %s' % (spec, surf_a, surf_b, sv,
-                                   parent, mapfunc, pn, pn, outname))
-    lg.info("Command: \n%s" % cmdargs)
-    p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
-    lg.info(p.stderr.decode("utf-8", "strict"))
-    lg.info("Done with vol2surf_mni")
+                    -out_1D %s' % (os.path.join(suma_dir,
+                                                'MNI_N27_%s.spec' % hemi),
+                                   '%s.smoothwm.gii' % hemi,
+                                   '%s.pial.gii' % hemi,
+                                   os.path.join(suma_dir,
+                                                'MNI_N27_SurfVol.nii'),
+                                   parent,
+                                   mapfunc, pn, pn,
+                                   outname))
+    log.info("Command: \n%s" % cmdargs)
+    proc = Popen(cmdargs, stdout=PIPE, stderr=STDOUT)
+    log.info(proc.stdout.read())
+    log.info("Done with vol2surf_mni.")
+
 
 def vol2surf_mni_no_pn(work_dir, mapfunc, hemi, parent, outname, logf=None):
     """
@@ -281,6 +284,7 @@ def vol2surf_mni_no_pn(work_dir, mapfunc, hemi, parent, outname, logf=None):
     p = subprocess.run(cmdargs, stderr=subprocess.PIPE)
     lg.info(p.stderr.decode("utf-8", "strict"))
     lg.info("Done with vol2surf_mni")
+
 
 def cluster(vx_thr, clst_thr, infile, outpref, logf=None):
     """
