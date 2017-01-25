@@ -15,6 +15,8 @@ def project_to_surf(logf, hh, pn):
     workdir = os.path.join(os.environ['avp'], 'nii', 'ramp_effects')
     for ramp in ['rampup', 'rampdown']:
         for condition in ["A", "V", "Intxn"]:
+            if condition is "Intxn" and ramp is "rampup":
+                continue
             fpref = 'clust_%s_%s_mema_out' % (condition, ramp)
             pr.vol2surf_mni(os.path.join(os.environ['avp'], 'nii',
                                          'ramp_effects'),
