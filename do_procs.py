@@ -1,29 +1,64 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep 18 18:09:48 2015
+Big update for maskdump proc on Jan 30 2017
 
 @author: andric
 """
 
 import os
 import procs as pr
+from setlog import setup_log
 
-if __name__ == '__main__':
+
+def call_maskdump_decon(log, mask, cond, workdir, subj):
+    """Call maskdump for deconvolve data."""
+    log.info('Maskdump in: %s', workdir)
+    inname = os.path.join(workdir, '%s_coef_%s+tlrc' % (cond, subj))
+    outname = os.path.join(workdir, '%s_coef_%s.txt' % (cond, subj))
+    pr.maskdump(workdir, mask, inname, outname)
+
+
+def call_maskdump_effects(log, mask, workdir, effect):
+    """Call maskdump for effect data.
+
+    arg: effect
+        This takes the form, e.g., 'A_rampdown'
+    """
+    log.info('maskdump_effects in %s', workdir)
+    inname = os.path.join(workdir, 'clust_%s_mema_out_mask+tlrc' % effect)
+    outname = os.path.join(workdir, 'clust_%s_mema_out_mask.txt' % effect)
+    if os.path.exists('%s.HEAD' % inname):
+        pr.maskdump(workdir, mask, inname, outname)
+
+
+def main():
+    """Execute function for maskdumps."""
+    logfile = setup_log(os.path.join(os.environ['avp'], 'logs',
+                                     'do_procs_maskdumps'))
     subj_list = [s for s in range(1, 20)]
-
-    effects = ['Aentr', 'Ventr', 'Aentr_intxn']
+    subj_list.remove(3)
+    subj_list.remove(11)
     mask = os.path.join(os.environ['FSLDIR'], 'data/standard',
                         'MNI152_T1_2mm_brain_mask_dil1.nii.gz')
 
-    for block in [20, 15, 10]:
-        outdir = os.path.join(os.environ['avp'], 'nii',
-                              'group_effects_%sblk' % block)
-        for ef in effects:
-            ef_pref = os.path.join(outdir,
-                                   'clust_%s_flt2_%sblk_msk_mema_mask+tlrc' %
-                                   (ef, block))
-            ef_file = '%s.BRIK.gz' % ef_pref
-            if os.path.exists('%s.BRIK.gz' % ef_pref):
-                clust_image = ef_file
-                out_txt = os.path.join(outdir, '%s.txt' % ef_pref)
-                pr.maskdump(outdir, mask, clust_image, out_txt)
+    conditions = ['ALowVLow_rampdown', 'ALowVLow_rampup',
+                  'ALowVHigh_rampdown', 'ALowVHigh_rampup',
+                  'AHighVLow_rampdown', 'AHighVLow_rampup',
+                  'AHighVHigh_rampdown', 'AHighVHigh_rampup']
+    for subject in subj_list:
+        for condition in conditions:
+            call_maskdump_decon(logfile, mask, condition,
+                                os.path.join(os.environ['avp'], 'nii',
+                                             'deconvolve_outs_ramps'),
+                                subject)
+
+    for ramp in ['rampup', 'rampdown']:
+        for condition in ["A", "V", "Intxn"]:
+            call_maskdump_effects(logfile, mask,
+                                  os.path.join(os.environ['avp'], 'nii',
+                                               'ramp_effects'),
+                                  '%s_%s' % (condition, ramp))
+
+
+if __name__ == '__main__':
+    main()
